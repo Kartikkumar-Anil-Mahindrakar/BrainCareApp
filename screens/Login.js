@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
         position:'relative',
         height:'100%',
         width:'90%',
-        fontFamily:'OpenSans-Medium',
+        fontWeight:'medium',
         paddingLeft:20,
     },
     social_btn:{

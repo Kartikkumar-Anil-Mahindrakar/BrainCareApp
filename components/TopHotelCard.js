@@ -44,15 +44,15 @@ const TopHotelCard = ({hotel}) => {
   const style = StyleSheet.create({
 
   topHotelCard: {
-    height: 120,
-    width: 200,
+    height: 200,
+    width: 300,
     backgroundColor: 'white',
     elevation: 15,
     marginHorizontal: 10,
     borderRadius: 10,
   },
   topHotelCardImage: {
-    height: 80,
+    height: 150,
     width: '100%',
     borderTopRightRadius: 10,
     borderTopLeftRadius: 10,

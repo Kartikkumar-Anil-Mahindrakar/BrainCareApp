@@ -29,7 +29,7 @@ return ans;
   for(let i=0;i<5;i++){
     if(i<rating){
     imgArr.push(
-      <View style={{flexDirection:"row"}}>
+      <View key={i} style={{flexDirection:"row"}}>
       <Image
        style={{height:15,width:15,marginRight:10}}
         source={require('../assets/starfill.png')}
@@ -39,7 +39,7 @@ return ans;
     }
       else{
         imgArr.push(
-      <View style={{flexDirection:"row"}}>
+      <View key={i} style={{flexDirection:"row"}}>
       <Image
        style={{height:15,width:15,marginRight:10}}
         source={require('../assets/starempty.png')}

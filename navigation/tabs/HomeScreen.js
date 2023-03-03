@@ -65,18 +65,7 @@ export default function HomeScreen({ navigation }) {
           <>
           <ChatBot/>
           <ScrollView >
-          <Text style={{fontWeight:"bold",marginLeft:'5%',marginTop:'5%'}}>Motha Carousel</Text>
-          <FlatList
-          snapToInterval={width - 20}
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{paddingLeft: 20, paddingVertical: 20}}
-          horizontal
-          data={reviewData}
-          renderItem={({item}) => <Card data={item} key={item} navigation= {navigation} />}
-          />
-          <ServiceSection callSymptomsScreen = {callSymptomsScreen} />
-
-          <Text style={{fontWeight:"bold",marginLeft:'5%',marginTop:'5%'}}>Chota Carousel</Text>
+          <Text style={{fontWeight:"bold",marginLeft:'5%',marginTop:'5%'}}>Top Rated Hospitals</Text>
           <FlatList
             data={houses}
             horizontal
@@ -88,9 +77,25 @@ export default function HomeScreen({ navigation }) {
             }}
             renderItem={({item}) => <TopHotelCard key={item} hotel={item} />}
           />
-
-          <Text style={{fontWeight:"bold",marginLeft:'5%',marginTop:'5%',marginBottom:'5%'}}>Patient Details</Text>
+          <ServiceSection callSymptomsScreen = {callSymptomsScreen} />
+          <Text style={{fontWeight:"bold",marginLeft:'5%',marginTop:'5%',marginBottom:'5%'}}> Brain Care by Numbers</Text>
           <CardNumber data={transfer} />
+
+          <Text style={{fontWeight:"bold",marginLeft:'5%',marginTop:'5%'}}>User Reviews</Text>
+          <FlatList
+          snapToInterval={width - 20}
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{paddingLeft: 20, paddingVertical: 20}}
+          horizontal
+          data={reviewData}
+          renderItem={({item}) => <Card data={item} key={item} navigation= {navigation} />}
+          key="ok"
+          />
+          
+
+          
+
+          
         
         
         

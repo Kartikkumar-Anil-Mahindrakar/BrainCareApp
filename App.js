@@ -25,7 +25,7 @@ import SymptomsScreen from './screens/SymptomsScreen';
 import FAQScreen from './screens/FAQScreen';
 
 // import Splash from './'
-import Ok from './screens/Ok.jsx';
+// import Ok from './screens/Ok';
 // You can import from local files
 import AssetExample from './components/AssetExample';
 import MainContainer from './navigation/MainContainer'

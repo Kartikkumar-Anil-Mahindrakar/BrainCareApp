@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity,Dimensions, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity,Dimensions, StyleSheet, Image } from 'react-native';
 const { width, height } = Dimensions.get('window');  
 
 const ChatBot = () => {
@@ -67,7 +67,9 @@ const ChatBot = () => {
           onPress={toggleChat}
           style={{...styles.floatingIcon }}
         >
-          <Text style={{ color: 'white', fontSize: 24 }}>?</Text>
+          <Image source={require('../assets/chatbot_icon.png')}
+                style={{width:24,height: 24}}  />
+          {/* <Text style={{ color: 'white', fontSize: 24 }}>?</Text> */}
         </TouchableOpacity>
       )}
     </View>

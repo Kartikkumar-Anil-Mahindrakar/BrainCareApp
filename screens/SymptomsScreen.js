@@ -42,7 +42,7 @@ const SymptomsScreen = () => {
   
   return (
     <>
-    {values.map(val=> <Symptoms title={val.title} img={val.img}/>)}
+    {values.map((val,idx)=> <Symptoms key={idx} title={val.title} img={val.img}/>)}
     </>
     
   );

@@ -7,6 +7,7 @@ const values = [{id:1,text:"Headache",img:require('../assets/images/doctor.png')
  const ServiceCard =(props) =>{
 
   return(
+    
     <View style={{marginTop:20,backgroundColor:"#DDDDDD",padding:30}}>
     <View style={{flexDirection:"row",justifyContent:"space-between"}}>
     <Text style={{fontWeight:"bold"}}>Symptoms</Text>
@@ -22,7 +23,7 @@ const values = [{id:1,text:"Headache",img:require('../assets/images/doctor.png')
 
     <View style={{flexDirection:"row",justifyContent:"space-between",marginTop:10}}>
 
-    {values.map(val=> <ServicesContainer text={val.text} img={val.img}/>)}
+    {values.map((val,idx) => <ServicesContainer key={idx} text={val.text} img={val.img}/>)}
   
     </View>
 

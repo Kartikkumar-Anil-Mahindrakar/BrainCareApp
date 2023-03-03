@@ -44,13 +44,19 @@ function MainContainer() {
             // You can return any component that you like here!
             return <Ionicons name={iconName} size={size} color={color} />;
           },
-        })}
-        tabBarOptions={{
-          activeTintColor: 'tomato',
-          inactiveTintColor: 'grey',
-          labelStyle: { paddingBottom: 10, fontSize: 10 },
-          style: { padding: 10, height: 70}
-        }}>
+          tabBarActiveTintColor: "tomato",
+          tabBarInactiveTintColor: "grey",
+          tabBarLabelStyle: {
+            "paddingBottom": 10,
+            "fontSize": 10
+          },
+          tabBarStyle: [
+            {
+              "display": "flex"
+            },
+            null
+          ]
+        })}>
 
         <Tab.Screen name={homeName} component={HomeScreen} options={{headerShown: false}} />
         <Tab.Screen name={reactAtUs} component={ContactUsScreen} options={{headerShown: false}} />

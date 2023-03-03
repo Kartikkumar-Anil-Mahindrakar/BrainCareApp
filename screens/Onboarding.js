@@ -10,17 +10,25 @@ const Onboarding = ({navigation}) => {
         <View style={{flex:1,backgroundColor:'#fff'}} >
             <StatusBar barStyle="dark-content" backgroundColor="#fff" />
             {/* handshake image */}
-            <View style={{flex:3,flexDirection:"column",backgroundColor:'#ddd'}} >
+            <View style={{flex:3,flexDirection:"column",justifyContent: 'center',alignItems: 'center',backgroundColor:'white'}} >
                 <ImageBackground source={require('../assets/images/n.jpeg')}
-                style={{flex:1,width:'100%',height: "100%",backgroundColor:'#fff'}}  />
+                style={{width:300,height: 300,backgroundColor:'#fff'}}  />
             </View>
 
             {/* button and text */}
             <View style={{flex:2,backgroundColor:'#fff'}} >
                 {/* Text part */}
                 <View style={{flex:1,flexDirection:'column',justifyContent:'flex-start',alignItems:'center',backgroundColor:'#fff'}} >
-                    <Text style={{fontFamily:'OpenSans-Bold',color:'000',fontSize:30}} >Brain Care App</Text>
-                    <Text style={{maxWidth:'50%', fontFamily:'OpenSans-Medium',color:"#999",fontSize:14, textAlign:'center',paddingTop:10}} >All new in one place, be the first to know last new</Text>
+                    {/* <Text style={{fontWeight:'bold',color:'000',fontSize:30}} >Brain Care App</Text> */}
+                    <View style={{flexDirection: 'row', marginTop: 20}}>
+                    <Text style={{fontWeight: 'bold', fontSize: 40, color: '#000'}}>
+                        Brain
+                    </Text>
+                    <Text style={{fontWeight: 'bold', fontSize: 40, color: '#64beff'}}>
+                        Care
+                    </Text>
+                    </View>
+                    <Text style={{maxWidth:'50%',fontStyle: 'italic',color:"#999",fontSize:14, textAlign:'center',paddingTop:10}} >All new in one place, be the first to know last new</Text>
                 </View>   
 
                 {/* Button */}

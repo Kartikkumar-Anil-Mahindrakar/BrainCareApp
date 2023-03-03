@@ -12,14 +12,14 @@ import {
   TouchableOpacity,
   ImageBackground,
 } from 'react-native';
-// import axios from 'axios';
-// import Config from 'react-native-config';
+import axios from 'axios';
+import Config from 'react-native-config';
 // import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
-// import * as ImagePicker from 'expo-image-picker';
-// import {Colors} from 'react-native/Libraries/NewAppScreen';
-// import PermissionsService from '../permissions';
+import * as ImagePicker from 'expo-image-picker';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
+import PermissionsService from '../permissions';
 
-// import DocumentPicker from 'react-native-document-picker';
+import DocumentPicker from 'react-native-document-picker';
 
 // axios.interceptors.request.use(
 //   async config => {
@@ -73,7 +73,7 @@ export default function TumorDetectionScreen(){
       });
       // bodyFormData.append('name',"My name");
       const url = Config.URL;
-       return fetch(`http://192.168.231.162:8000/predict`, {
+       return fetch(`http://192.168.0.104:8000/predict`, {
         method: 'POST',
         headers: {
             Accept :'*/*',
@@ -180,11 +180,10 @@ export default function TumorDetectionScreen(){
     //   setImage(result[0].uri);
     // }
     const result = await ImagePicker.launchImageLibraryAsync(options);
+    console.log(result);
     if (!result.cancelled) {
         setImage(result.uri);
-        
-        console.log(result.uri);
-        console.log(result.assetId);
+        // console.log(result);
         getResult(result);
     }
     
@@ -193,8 +192,12 @@ export default function TumorDetectionScreen(){
   return (
     <View style={[backgroundStyle, styles.outer]}>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      
-      <Text style={{...styles.title,color:"#434242"}}>{'Brain Tumor🧠 Detection'}</Text>
+      {/* <ImageBackground
+        blurRadius={10}
+        source={{uri: 'https://cdn.pixabay.com/photo/2016/03/08/20/03/flag-1244649__340.jpg'}}
+        style={{height: height, width: width}}
+      /> */}
+      <Text style={styles.title}>{'Brain Tumor🧠 \nDetection App'}</Text>
       <TouchableOpacity onPress={clearOutput} style={styles.clearStyle}>
         <Image source={{uri: 'clean'}} style={styles.clearImage} />
       </TouchableOpacity>
@@ -217,29 +220,18 @@ export default function TumorDetectionScreen(){
         </View>
       )) ||
         (image && <Text style={styles.emptyText}>{label}</Text>) || (
-          
-          <Text style={{...styles.emptyText}}>
-
-            Use below button to upload ur mri image
+          <Text style={styles.emptyText}>
+            Use below buttons to select a picture of a BRAIN MRI IMAGE.
           </Text>
         )}
       <View style={styles.btn}>
-        <TouchableOpacity
-          activeOpacity={0.9}
-          onPress={() => manageCamera('Camera')}
-          style={styles.btnStyle}>
-          {/* <Image source={{uri: 'camera'}} style={styles.imageIcon} /> */}
-
-          <Text style={{fontSize:17,color:"#434242",fontWeight:"bold"}}>CAMERA</Text>
-        </TouchableOpacity>
+        
         <TouchableOpacity
           activeOpacity={0.9}
           onPress={() => manageCamera('Photo')}
-
           style={styles.btnStyle}>
           {/* <Image source={{uri: 'gallery'}} style={styles.imageIcon} /> */}
-          <Text style={{fontSize:17,color:"#434242",fontWeight:"bold"}}>UPLOAD</Text>
-
+          <Text style={{fontSize:20}}>UPLOAD</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -251,11 +243,10 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     position: 'absolute',
     top: ( 35) || 10,
-    fontSize: 30,
-    fontWeight: "bold",
-    
+    fontSize: 40,
+    ...fonts.Bold,
+    color: 'black',
   },
-
   clearImage: {height: 40, width: 40, tintColor: '#FFF'},
   mainOuter: {
     flexDirection: 'row',
@@ -264,41 +255,34 @@ const styles = StyleSheet.create({
     top: height / 1.6,
     alignSelf: 'center',
   },
-
   outer: {
-    backgroundColor: '#F0EEED',
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor:'#F0EEED',
   },
   btn: {
     position: 'absolute',
-    bottom: 60,
+    bottom: 40,
     justifyContent: 'space-between',
     flexDirection: 'row',
   },
-
   btnStyle: {
-    backgroundColor: '#EEEEEE',
+    backgroundColor: '#FFF',
     opacity: 0.8,
-
-    borderWidth:1,
-    borderColor:"#434242",
-    marginHorizontal: 20,
-    padding: 15,
-    paddingRight:35,
-    paddingLeft: 35,
-    borderRadius: 30,
+    marginHorizontal: 30,
+    padding: 20,
+    borderRadius: 20,
   },
-
   imageStyle: {
     marginBottom: 50,
     width: width / 1.5,
     height: width / 1.5,
     borderRadius: 20,
     position: 'absolute',
-    borderWidth: 0.3,
-    borderColor: '#FFF',
+    borderWidth: 1,
+    borderColor: 'black',
+
     top: height / 4.5,
   },
   clearStyle: {
@@ -309,19 +293,16 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   space: {marginVertical: 10, marginHorizontal: 10},
-  labelText: {color: '#FFF', fontSize: 30, ...fonts.Bold},
-  resultText: {fontSize: 32,color:'yellow', ...fonts.Bold},
+  labelText: {color: 'black', fontSize: 30, ...fonts.Bold},
+  resultText: {fontSize: 32,color:'#865DFF', ...fonts.Bold},
   imageIcon: {height: 40, width: 40, tintColor: '#000'},
   emptyText: {
     position: 'absolute',
-
-    top: height / 1.5,
+    top: height / 1.6,
     alignSelf: 'center',
-    color: '#73777B',
-    fontSize: 19,
-   
-    fontWeight:"bold"
-    
-  
+    color: 'black',
+    fontSize: 25,
+    maxWidth: '70%',
+    ...fonts.Bold,
   },
 });

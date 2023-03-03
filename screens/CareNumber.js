@@ -43,14 +43,14 @@ const TransferItem = (props) => {
 const CareNumber = (props) => {
   return ( 
     <>
-    <View style={{flexDirection:"row",alignItems: "center",justifyContent: "center"}}>
+    <View style={{flexDirection:"row",alignItems: "center",justifyContent: "space-evenly"}}>
       <TransferItem data = {props.data[0] } />
       <Spacer height={15} />
       
       <TransferItem data = { props.data[1] } />
       
     </View>
-    <View style={{flexDirection:"row",alignItems: "center",justifyContent: "center"}}>
+    <View style={{flexDirection:"row",alignItems: "center",justifyContent: "space-evenly"}}>
       <TransferItem data = {props.data[2] } />
       <Spacer height={15} />
       

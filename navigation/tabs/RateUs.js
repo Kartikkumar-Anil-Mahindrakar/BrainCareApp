@@ -44,17 +44,17 @@ const Rating = () =>{
 
     
    
-    {max.map((val)=>{
+    {max.map((val,idx)=>{
         if(val <= defaultstar)
         {
           return (
-            <TouchableOpacity onPress={() => newstar(val)}>
+            <TouchableOpacity key={idx} onPress={() => newstar(val)}>
             <Image source={require("../../assets/starfill.png")} style={{height:30,width:30}}/>
             </TouchableOpacity>)
         }
         else{
           return (
-            <TouchableOpacity onPress={() => newstar(val)}>
+            <TouchableOpacity key={idx} onPress={() => newstar(val)}>
             <Image source={require("../../assets/starempty.png")} style={{height:30,width:30}}/>
             </TouchableOpacity>
 
