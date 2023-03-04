@@ -26,6 +26,7 @@
     "react-native-config": "^1.5.0",
     "react-native-document-picker": "^8.1.3",
     "react-native-gesture-handler": "~2.5.0",
+    "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-paper": "*",
     "react-native-permissions": "^3.7.3",
     "react-native-radio-buttons-group": "*",
