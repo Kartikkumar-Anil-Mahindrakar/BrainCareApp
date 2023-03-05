@@ -63,7 +63,7 @@ export default function HomeScreen({ navigation }) {
   }
     return (
           <>
-          <ChatBot/>
+          <ChatBot navigation={navigation}/>
           <ScrollView >
           <Text style={{fontWeight:"bold",marginLeft:'5%',marginTop:'5%'}}>Top Rated Hospitals</Text>
           <FlatList

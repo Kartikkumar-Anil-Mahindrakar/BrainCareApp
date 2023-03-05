@@ -1,83 +1,110 @@
-
 import * as React from 'react';
 import { Text, View, StyleSheet,Image,TouchableOpacity,Button,TextInput,KeyboardAvoidingView } from 'react-native';
 import Constants from 'expo-constants';
 import RadioGroup from 'react-native-radio-buttons-group';
 
 
-// You can import from local files
-
-// or any pure javascript modules available in npm
-
-
-
-
-    
-
+import { getDatabase, ref, onValue,set} from "firebase/database";
 
 export default function RateUs() {
-  const [radioButtons, setRadioButtons] = React.useState([
-        {
-            id: '1', 
-            label: 'Yes',
-            value: 'Yes',
-        },
-        {
-            id: '2',
-            label: 'No',
-            value: 'No'
-        }
-    ]);
-    function onPressRadioButton(radioButtonsArray) {
-        setRadioButtons(radioButtonsArray);
-    }
 
+  const [reviewCount,setReviewCount] = React.useState(1);
+  const [selectedRadioValue, setSelectedRadioValue] = React.useState(null);
   const [defaultstar,newstar] = React.useState(2);
   const [max,setmax] = React.useState([1,2,3,4,5]);
+  const [review, setReview] = React.useState('');
 
-const Rating = () =>{
+  const handleRadioSelect = (value) => {
+    setSelectedRadioValue(value);
+  };
 
-  return(
+  const dataAddOn = () =>{
+    const db = getDatabase();
+
+    var key = `Review${reviewCount}`
+    // console.log(key,reviewCount);
+    // console.log(defaultstar);
+    // console.log(`Feedback/${key}`);
     
+    // console.log(review);
+    set(ref(db,`Feedback/${key}`),{
+    rating: defaultstar,
+    recommended:  selectedRadioValue,
+    reviewMsg: review,
+    });
+    setReviewCount(reviewCount+1);
+    newstar(2);   
+    setSelectedRadioValue(null);
+    setReview('');
+  }
 
-    <View style={{flexDirection:"row",width:300,justifyContent:"space-evenly",padding:10,marginLeft:"auto",marginRight:"auto"}}>
 
-    
-   
-    {max.map((val,idx)=>{
-        if(val <= defaultstar)
-        {
-          return (
-            <TouchableOpacity key={idx} onPress={() => newstar(val)}>
-            <Image source={require("../../assets/starfill.png")} style={{height:30,width:30}}/>
-            </TouchableOpacity>)
-        }
-        else{
-          return (
-            <TouchableOpacity key={idx} onPress={() => newstar(val)}>
-            <Image source={require("../../assets/starempty.png")} style={{height:30,width:30}}/>
-            </TouchableOpacity>
-
-          )
-
-        }
-
-        
   
-    }
-)}
+  // const [recommend, setRecommend] = React.useState('');
 
+  const Rating = () =>{
 
+    return(
+      <View style={{flexDirection:"row",width:300,justifyContent:"space-evenly",padding:10,marginLeft:"auto",marginRight:"auto",backgroundColor:"red"}}>
+        {max.map((val,idx)=>{
+            if(val <= defaultstar)
+            {
+              return (
+                <TouchableOpacity
+                key={idx}
+                  onPress={() => newstar(val)}
+                  >
+                <Image source={require("../../assets/starfill.png")} style={{height:30,width:30}}/>
+                </TouchableOpacity>
+              )
+            }
+            else{
+              return (
+                <TouchableOpacity
+                key={idx} 
+                onPress={() => newstar(val)}
+                >
+                <Image source={require("../../assets/starempty.png")} style={{height:30,width:30}}/>
+                </TouchableOpacity>
+              )
+            }
+          }
+        )}
+      </View>  
+    );
+  }
 
+  const RadioButtons = ()=>{
+    return (
+      <View style={styles.radioContainer}>
+      <View style={styles.radioButtonContainer}>
+        <TouchableOpacity
+          style={styles.radioButton}
+          onPress={() => handleRadioSelect('yes')}
+        >
+          {selectedRadioValue === 'yes' && (
+            <View style={styles.radioButtonSelected}>
 
+            </View>
+          )}
+        </TouchableOpacity>
+        <Text style={styles.radioButtonLabel}>Yes</Text>
+      </View>
+      <View style={styles.radioButtonContainer}>
+        <TouchableOpacity
+          style={styles.radioButton}
+          onPress={() => handleRadioSelect('no')}
+        >
+          {selectedRadioValue === 'no' && (
+            <View style={styles.radioButtonSelected}>
+            </View>
+          )}
+        </TouchableOpacity>
+        <Text style={styles.radioButtonLabel}>No</Text>
+      </View>
     </View>
-    
-  );
-
-
-  
-}
-
+    );
+  }
 
   return (
     <View style={{margin:"auto",flex:1,alignItems:"center",justifyContent:"center"}}>
@@ -87,26 +114,21 @@ const Rating = () =>{
     <Text style={{fontWeight:"bold",marginTop:3,fontSize:20,marginLeft:"auto",marginRight:"auto"}}>{defaultstar}/5</Text>
 
 
-    <View style={{alignItems:"center",marginBottom:20,marginTop:50}}>
+    <View style={{alignItems:"center",marginBottom:20,marginTop:50 ,backgroundColor:"yellow"}}>
     <View>
     <Text style={{fontSize:18,fontWeight:"bold",color:"grey"}}>
     Would you recommend our services?
     </Text>
     </View>
-
-      <RadioGroup 
-    radioButtons={radioButtons} 
-    onPress={onPressRadioButton} 
-    layout='row'
-    selectedButtonColor = 'red'
-/>
-
+      <RadioButtons/>
     </View>
 
-    <View style={{marginBottom:50}}>
+    <View style={{marginBottom:50,backgroundColor:"green"}}>
     <TextInput
     multiline={true}
     numberOfLines={5}
+    value= {review}
+    onChangeText={text => setReview(text)}
     placeholder="Write your review about our App here"
     style={{ height:130,width:350,textAlignVertical: 'top',borderWidth:1,borderRadius:10,padding:15}}/>
     </View>
@@ -118,8 +140,10 @@ const Rating = () =>{
     <View style={{marginTop:20,width:200,marginRight:"auto",marginLeft:"auto",borderRadius:20,}}>
 
    
-<TouchableOpacity onPress={()=>{}} style={{...styles.social_btn,backgroundColor:'#28388f',marginTop:20}} >
-                    <Text style={{width:'80%',textAlign:'center',fontSize:18,fontWeight: 'bold',color:'#fff'}} >Submit</Text>
+<TouchableOpacity 
+
+      onPress={dataAddOn} style={{...styles.social_btn,backgroundColor:'#28388f',marginTop:20}} >
+        <Text style={{width:'80%',textAlign:'center',fontSize:18,fontWeight: 'bold',color:'#fff'}} >Submit</Text>
      </TouchableOpacity>
 
 
@@ -154,5 +178,38 @@ const styles = StyleSheet.create({
         alignItems:'center',
         marginBottom:20,
         justifyContent:"center"
+    },
+    radioContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
+    radioButtonContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingHorizontal:10,
+    },
+    radioButton: {
+      borderWidth: 1,
+      borderColor: '#000',
+      borderRadius: 50,
+      width: 24,
+      height: 24,
+      alignItems: 'center',
+      justifyContent: 'center',
+      
+    },
+    radioButtonSelected: {
+      backgroundColor: 'grey',
+      borderRadius: 50,
+      width: 16,
+      height: 16,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    radioButtonLabel: {
+      marginLeft: 4,
+      fontSize:16,
+      fontWeight:'bold',
     },
 });

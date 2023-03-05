@@ -1,8 +1,13 @@
-// Import the functions you need from the SDKs you need
-// import { initializeApp } from 'firebase/compat/app';
-// import { getAuth ,sendEmailVerification} from "firebase/auth";
-// import 'firebase/compat/auth';
-// import 'firebase/compat/firestore';
+import { initializeApp } from "firebase/app";
+import { getAuth ,sendEmailVerification} from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
+import 'firebase/compat/auth';
+import 'firebase/compat/firestore';
+
+//to query database
+import {getDatabase} from 'firebase/database';
+
+
 const firebaseConfig = {
   apiKey: 'AIzaSyAW5BxgW9koEKU7tZlqI0RIC5v4qKx7yNg',
   authDomain: 'brain-care-29e1e.firebaseapp.com',
@@ -13,5 +18,9 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-// const app = initializeApp(firebaseConfig);
-// export const authentication = getAuth(app);
+const app = initializeApp(firebaseConfig);
+
+
+//Realtime Database
+const db = getDatabase();
+export  default db;

@@ -1,4 +1,5 @@
-import * as React from 'react';
+import React, { useState, useRef,useEffect } from 'react';
+import { Keyboard } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -21,6 +22,32 @@ const tumorsName = 'TumorDetection';
 const Tab = createBottomTabNavigator();
 
 function MainContainer() {
+  const [keyboardShown, setKeyboardShown] = useState(false);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => setKeyboardShown(true)
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => setKeyboardShown(false)
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
+  const getDisplay = (flag)=>{
+    if(!flag){
+      return 'flex';
+    }else{
+      return 'none';
+    }
+  }
+
   return (
       <Tab.Navigator
         initialRouteName={homeName}
@@ -52,13 +79,13 @@ function MainContainer() {
           },
           tabBarStyle: [
             {
-              "display": "flex"
+              "display": getDisplay(keyboardShown),
             },
             null
           ]
         })}>
 
-        <Tab.Screen name={homeName} component={HomeScreen} options={{headerShown: false}} />
+        <Tab.Screen name={homeName} component={HomeScreen} options={{headerShown: false}}  />
         <Tab.Screen name={reactAtUs} component={ContactUsScreen} options={{headerShown: false}} />
         <Tab.Screen name={tumorsName} component={TumorDetectionScreen} options={{headerShown: false}}/>
         <Tab.Screen name={settingsName} component={RateUs} options={{headerShown: false}}/>

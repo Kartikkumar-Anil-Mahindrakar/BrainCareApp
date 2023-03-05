@@ -1,14 +1,38 @@
-import React, { useState, useRef } from 'react';
-import { View, Text, TextInput, TouchableOpacity,Dimensions, StyleSheet, Image , KeyboardAvoidingView} from 'react-native';
+// import { async } from '@firebase/util';
+import React, { useState, useRef,useEffect } from 'react';
+import { View, Text, TextInput, TouchableOpacity,Dimensions, StyleSheet, Image , KeyboardAvoidingView, Keyboard} from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 const { width, height } = Dimensions.get('window');  
 
-const ChatBot = () => {
-  const [messages, setMessages] = useState([{ text: 'Hello! How can I help you today?', fromUser: false, options: ['Book a flight', 'Make a hotel reservation', 'Rent a car'] }]);
+const ChatBot = ({navigation}) => {
+  const [messages, setMessages] = useState([{ text: 'Hello! How can I help you today?\nHere are few navigation buttons which might help you!!', fromUser: false, options: ['Navigate to tumor detection page', 'Navigate to Contact Us page', 'Explore current homepage'] }]);
   const [inputText, setInputText] = useState('');
   const yourRef = useRef(null);
   const [showChat, setShowChat] = useState(false);
+  const [keyboardShown, setKeyboardShown] = useState(false);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => setKeyboardShown(true)
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => setKeyboardShown(false)
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
+  //delay creator while navigating from chatbot to screen
+  const delay = (func) => new Promise((res) => setTimeout(func, 2000));
+  const syncTimeout = async (func) => {
+    await delay(func); 
+  };
 
   const sendMessage = (text) => {
       // setMessages([...messages, { text: text, fromUser: false }]);
@@ -22,31 +46,38 @@ const ChatBot = () => {
       switch (text.toLowerCase()) {
         case 'hi':
         case 'hello':
-          responseText = 'Hello! How can I help you today?';
-          options = ['Book a flight', 'Make a hotel reservation', 'Rent a car'];
+          responseText = 'Hello! How can I help you today?\nHere are few navigation options which might help you!!';
+          options = ['Navigate to tumor detection page', 'Navigate to Contact Us page', 'Explore current homepage'];
           break;
+        case 'navigate to tumor detection page':
+          setMessages([...messages,{ text: text, fromUser: true },{ text: 'Thankyou for using our Chatbot😊', fromUser: false, options },{ text: 'You will soon be redirected to Tumor Detection Page', fromUser: false, options }]);
+          syncTimeout(
+            ()=>{
+                navigation.navigate('TumorDetection');
+                toggleChat();
+              }
+          );
+          return;
+          case 'navigate to contact us page':
+            setMessages([...messages,{ text: text, fromUser: true },{ text: 'Thankyou for using our Chatbot😊', fromUser: false, options },{ text: 'You will soon be redirected to Contact Us Page', fromUser: false, options }]);
+            syncTimeout(
+              ()=>{
+                  navigation.navigate('ContactUs');
+                  toggleChat();
+                }
+            );
+            return;
+            case 'explore current homepage':
+              setMessages([...messages,{ text: text, fromUser: true },{ text: 'Thankyou for using our Chatbot😊', fromUser: false, options }]);
+              syncTimeout(
+                ()=>{
+                    toggleChat();
+                  }
+              );
+              return;
         case 'book a flight':
           responseText = 'Sure, where are you flying from?';
           options = ['new york'];
-          break;
-        case 'new york':
-          responseText = 'And where are you flying to?';
-          options = ['san francisco'];
-          break;
-        case 'san francisco':
-          responseText = 'Great! When do you want to leave?';
-          options = ['next monday'];
-          break;
-        case 'next monday':
-          responseText = 'Okay, I found a flight leaving JFK at 10am on Monday, arriving at SFO at 2pm. Does that work for you?';
-          options = ['Yes', 'No, show me other options'];
-          break;
-        case 'yes':
-          responseText = 'Okay, your flight from JFK to SFO on Monday is booked!';
-          break;
-        case 'no, show me other options':
-          responseText = 'Here are some other options for flights from JFK to SFO on Monday:';
-          options = ['8am - 12pm', '1pm - 5pm', '6pm - 10pm'];
           break;
         default:
           responseText = "I'm sorry, I didn't understand that. Can you please rephrase?";
@@ -54,13 +85,13 @@ const ChatBot = () => {
       }
       // Add the chatbot's response to the messages list
       // console.log(messages,'hello');
-      setMessages([...messages,{ text: text, fromUser: true }, { text: responseText, fromUser: false, options }]);
+      setMessages([...messages,{ text: text, fromUser: true }, { text: responseText, fromUser: false, options }]);      
     // }, 3000);
   };
 
   const toggleChat = () => {
     if(showChat){
-      setMessages([{ text: 'Hello! How can I help you today?', fromUser: false, options: ['Book a flight', 'Make a hotel reservation', 'Rent a car'] }]);
+      setMessages([{ text: 'Hello! How can I help you today?\nHere are few navigation buttons which might help you!!', fromUser: false, options: ['Navigate to tumor detection page', 'Navigate to Contact Us page', 'Explore current homepage'] }]);
     }
     setShowChat(!showChat);
   };
@@ -69,8 +100,8 @@ const ChatBot = () => {
     <View style={{zIndex: 5}}>
       {showChat ? (
         // Render your chat interface here
-        
-        <View style={styles.floatingCard}>
+        <KeyboardAvoidingView style={{flex:1,}} behavior="padding" enabled>
+        <View style={[keyboardShown?styles.floatingCardShift:styles.floatingCard]}>
         <View style={styles.header}>
           <Text style={styles.headerText}>BrainCare ChatBot</Text>
           <TouchableOpacity onPress={toggleChat}>
@@ -106,7 +137,6 @@ const ChatBot = () => {
           />
 
         </View>
-        <KeyboardAvoidingView>
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.input}
@@ -121,9 +151,9 @@ const ChatBot = () => {
             <Text style={styles.sendButtonText}>Send</Text>
           </TouchableOpacity>
         </View>
-        </KeyboardAvoidingView>
+        
       </View>
-      
+      </KeyboardAvoidingView>
       ) : (
         // Render your floating button here
         <TouchableOpacity
@@ -169,6 +199,7 @@ const styles = StyleSheet.create({
     left:width-160,
     top:height-300,
     backgroundColor: 'white',
+    borderWidth:.4,
     borderRadius: 10,
     opacity:1,
     shadowColor: '#000',
@@ -184,7 +215,21 @@ const styles = StyleSheet.create({
   floatingCard: {
     position: 'absolute',
     left:width-360,
-    top:height-600,
+    top:height-650,
+    borderRadius: 10,
+    backgroundColor:'#3795BD',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  floatingCardShift: {
+    position: 'absolute',
+    left:width-360,
     borderRadius: 10,
     backgroundColor:'#3795BD',
     shadowColor: '#000',
@@ -213,26 +258,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color:'white',
   },
-  container: {
-    position: 'absolute',
-    bottom: 20,
-    right: 20,
-    borderRadius: 10,
-    backgroundColor: '#FFF8DC',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
+  
   messagesContainer: {
     flex:1,
     flexGrow :1,
     padding: 10,
-    height:250,
+    height:300,
     
     backgroundColor: '#fdfdfd',
   },
