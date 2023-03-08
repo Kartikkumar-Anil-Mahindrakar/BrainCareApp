@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState,useEffect} from 'react';
 import {
   SafeAreaView,
   Image,
@@ -15,6 +15,7 @@ import {
 import axios from 'axios';
 import Config from 'react-native-config';
 // import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+// import { NetworkInfo } from 'react-native-network-info';
 import * as ImagePicker from 'expo-image-picker';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import PermissionsService from '../permissions';
@@ -56,6 +57,8 @@ export default function TumorDetectionScreen(){
   const [label, setLabel] = useState('');
   const isDarkMode = useColorScheme() === 'light';
   const [image, setImage] = useState('');
+  const [ipAddress, setIpAddress] = useState('');
+
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
@@ -73,7 +76,7 @@ export default function TumorDetectionScreen(){
       });
       // bodyFormData.append('name',"My name");
       const url = Config.URL;
-       return fetch(`http://192.168.0.104:8000/predict`, {
+       return fetch(`http://192.168.142.162:8000/predict`, {
         method: 'POST',
         headers: {
             Accept :'*/*',
