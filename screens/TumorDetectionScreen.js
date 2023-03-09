@@ -76,7 +76,10 @@ export default function TumorDetectionScreen(){
       });
       // bodyFormData.append('name',"My name");
       const url = Config.URL;
-       return fetch(`http://192.168.142.162:8000/predict`, {
+
+      
+      // 192.168.92.16 ipconfig
+       return fetch(`http://192.168.92.16:8000/predict`, {
         method: 'POST',
         headers: {
             Accept :'*/*',
