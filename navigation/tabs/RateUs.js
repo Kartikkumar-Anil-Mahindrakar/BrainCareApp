@@ -3,7 +3,7 @@ import { Text, View, StyleSheet,Image,TouchableOpacity,Button,TextInput,Keyboard
 import Constants from 'expo-constants';
 import RadioGroup from 'react-native-radio-buttons-group';
 
-
+import db from '../../firebase';
 import { getDatabase, ref, onValue,set} from "firebase/database";
 
 export default function RateUs() {
@@ -19,8 +19,7 @@ export default function RateUs() {
   };
 
   const dataAddOn = () =>{
-    const db = getDatabase();
-
+    
     var key = `Review${reviewCount}`
     // console.log(key,reviewCount);
     // console.log(defaultstar);
@@ -45,7 +44,7 @@ export default function RateUs() {
   const Rating = () =>{
 
     return(
-      <View style={{flexDirection:"row",width:300,justifyContent:"space-evenly",padding:10,marginLeft:"auto",marginRight:"auto",backgroundColor:"red"}}>
+      <View style={{flexDirection:"row",width:300,justifyContent:"space-evenly",padding:10,marginLeft:"auto",marginRight:"auto"}}>
         {max.map((val,idx)=>{
             if(val <= defaultstar)
             {
@@ -114,7 +113,7 @@ export default function RateUs() {
     <Text style={{fontWeight:"bold",marginTop:3,fontSize:20,marginLeft:"auto",marginRight:"auto"}}>{defaultstar}/5</Text>
 
 
-    <View style={{alignItems:"center",marginBottom:20,marginTop:50 ,backgroundColor:"yellow"}}>
+    <View style={{alignItems:"center",marginBottom:20,marginTop:50}}>
     <View>
     <Text style={{fontSize:18,fontWeight:"bold",color:"grey"}}>
     Would you recommend our services?
@@ -123,7 +122,7 @@ export default function RateUs() {
       <RadioButtons/>
     </View>
 
-    <View style={{marginBottom:50,backgroundColor:"green"}}>
+    <View style={{marginBottom:50}}>
     <TextInput
     multiline={true}
     numberOfLines={5}

@@ -9,18 +9,23 @@ import {getDatabase} from 'firebase/database';
 
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBUzC_B_77jEgzofudG7bt_-4cGJLb4kgA",
-  authDomain: "brain--care-app.firebaseapp.com",
-  projectId: "brain--care-app",
-  storageBucket: "brain--care-app.appspot.com",
-  messagingSenderId: "1075853321778",
-  appId: "1:1075853321778:web:269c9304312303685c3e2b"
+  apiKey: "AIzaSyAsGaH5WRwWNNWUucw-m-g0dZ6Q5t-tJCQ",
+  authDomain: "braincareapp-43361.firebaseapp.com",
+  databaseURL: "https://braincareapp-43361-default-rtdb.firebaseio.com",
+  projectId: "braincareapp-43361",
+  storageBucket: "braincareapp-43361.appspot.com",
+  messagingSenderId: "394666829068",
+  appId: "1:394666829068:web:6963542ce10b4c48395529"
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+try{
+  const app = initializeApp(firebaseConfig);
+}catch(e){
+  console.log('error in firebase');
+}
 
 
 //Realtime Database
 const db = getDatabase();
-export  default db;
+export default db;
