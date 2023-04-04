@@ -8,6 +8,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import MainContainer from '../navigation/MainContainer';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const vw = Dimensions.get('window').width/100;
 const vh = Dimensions.get('window').height/100;
@@ -23,7 +24,7 @@ const SideMenu = (props) => {
         <View style={{flex:1}}> 
             <DrawerContentScrollView {...props}> 
                 <View style={styles.userInfoSection}>
-                    <View style={{flexDirection:'row',marginTop: 15}}>
+                    <TouchableOpacity onPress={()=>{props.navigation.navigate('ProfileScreen')}} style={{flexDirection:'row',marginTop: 15}} >
                         <Avatar.Image 
                             source={require('../assets/icon.png')}
                             size={50}
@@ -32,7 +33,7 @@ const SideMenu = (props) => {
                             <Title style={styles.title}> Kartikkumar </Title>
                             <Caption style={styles.caption}>mahindrakar.com</Caption>
                         </View>
-                    </View>
+                    </TouchableOpacity>
                                       
                 </View>
                 {/* Drawer Section */}

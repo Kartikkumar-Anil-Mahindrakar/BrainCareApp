@@ -9,13 +9,13 @@ import {getDatabase} from 'firebase/database';
 
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAsGaH5WRwWNNWUucw-m-g0dZ6Q5t-tJCQ",
-  authDomain: "braincareapp-43361.firebaseapp.com",
-  databaseURL: "https://braincareapp-43361-default-rtdb.firebaseio.com",
-  projectId: "braincareapp-43361",
-  storageBucket: "braincareapp-43361.appspot.com",
-  messagingSenderId: "394666829068",
-  appId: "1:394666829068:web:6963542ce10b4c48395529"
+  apiKey: "AIzaSyAW5BxgW9koEKU7tZlqI0RIC5v4qKx7yNg",
+  authDomain: "brain-care-29e1e.firebaseapp.com",
+  databaseURL: "https://brain-care-29e1e-default-rtdb.firebaseio.com",
+  projectId: "brain-care-29e1e",
+  storageBucket: "brain-care-29e1e.appspot.com",
+  messagingSenderId: "682029044098",
+  appId: "1:682029044098:web:334a8e1b8be6a2e732bf9b"
 };
 
 // Initialize Firebase

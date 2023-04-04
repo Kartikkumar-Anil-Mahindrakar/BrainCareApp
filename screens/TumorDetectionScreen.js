@@ -11,6 +11,7 @@ import {
   View,
   TouchableOpacity,
   ImageBackground,
+  Alert
 } from 'react-native';
 import axios from 'axios';
 import Config from 'react-native-config';
@@ -52,7 +53,7 @@ const options = {
   }
 };
 
-export default function TumorDetectionScreen(){
+export default function TumorDetectionScreen({navigation}){
   const [result, setResult] = useState('');
   const [label, setLabel] = useState('');
   const isDarkMode = useColorScheme() === 'light';
@@ -79,7 +80,7 @@ export default function TumorDetectionScreen(){
 
       
       // 192.168.92.16 ipconfig
-       return fetch(`http://192.168.92.16:8000/predict`, {
+       return fetch(`http://192.168.229.162:8000/predict`, {
         method: 'POST',
         headers: {
             Accept :'*/*',
@@ -167,14 +168,26 @@ export default function TumorDetectionScreen(){
     const params = {
       uri: response.uri,
     };
-    const res = await getPredication(params);
-    console.log("OK");
-    if (res.class) {
-      setLabel(res.class);
-      setResult(res.confidence);
-    } else {
-      setLabel('Failed to predict');
-    }
+    try{
+
+        const res = await getPredication(params);
+        
+        console.log("OK",res.ismri);
+        if(!res.ismri) {
+          Alert.alert("Please input a proper MRI brain Image. Please Try Again!!  ");
+          setResult('');
+          setImage('');
+          setLabel('');
+        } else if (res.class) {
+          setLabel(res.class);
+          setResult(res.confidence);
+        }
+      }catch(e){
+        Alert.alert("There's issue with the image input file. Please Try Again!!");
+        setResult('');
+        setImage('');
+        setLabel('');
+      }
   };
 
   const openLibrary = async () => {
@@ -186,7 +199,7 @@ export default function TumorDetectionScreen(){
     //   setImage(result[0].uri);
     // }
     const result = await ImagePicker.launchImageLibraryAsync(options);
-    console.log(result);
+    console.log("result",result);
     if (!result.cancelled) {
         setImage(result.uri);
         // console.log(result);
@@ -212,6 +225,7 @@ export default function TumorDetectionScreen(){
       )) ||
         null}
       {(result && label && (
+        <>
         <View style={styles.mainOuter}>
           <Text style={[styles.space, styles.labelText]}>
             {'Label: \n'}
@@ -224,20 +238,29 @@ export default function TumorDetectionScreen(){
             </Text>
           </Text>
         </View>
+        
+      </>
       )) ||
         (image && <Text style={styles.emptyText}>{label}</Text>) || (
+          <>
+          
           <Text style={styles.emptyText}>
-            Use below buttons to select a picture of a BRAIN MRI IMAGE.
+            Use below button to select a picture of a Brain Mri Image.
           </Text>
+          </>
         )}
-      <View style={styles.btn}>
-        
+      <View style={styles.btn}>  
         <TouchableOpacity
           activeOpacity={0.9}
           onPress={() => manageCamera('Photo')}
           style={styles.btnStyle}>
-          {/* <Image source={{uri: 'gallery'}} style={styles.imageIcon} /> */}
           <Text style={{fontSize:20}}>UPLOAD</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          activeOpacity={0.9}
+          onPress={() => {navigation.navigate('HospitalFilterScreen')}}
+          style={styles.btnStyle}>
+          <Text style={{fontSize:20}}>Recommend Hospitals</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -270,7 +293,7 @@ const styles = StyleSheet.create({
   btn: {
     position: 'absolute',
     bottom: 40,
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     flexDirection: 'row',
   },
   btnStyle: {
@@ -304,11 +327,12 @@ const styles = StyleSheet.create({
   imageIcon: {height: 40, width: 40, tintColor: '#000'},
   emptyText: {
     position: 'absolute',
-    top: height / 1.6,
+    top: height / 1.7,
     alignSelf: 'center',
     color: 'black',
     fontSize: 25,
-    maxWidth: '70%',
+    maxWidth: '80%',
+    height:100,
     ...fonts.Bold,
   },
 });

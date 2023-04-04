@@ -31,6 +31,9 @@ import AssetExample from './components/AssetExample';
 import MainContainer from './navigation/MainContainer'
 // or any pure javascript modules available in npm
 import { Card } from 'react-native-paper';
+import ProfileScreen from './screens/ProfileScreen';
+import HospitalFilterScreen from './screens/recommendation/HospitalFilterScreen';
+import Hospitalview from './screens/recommendation/hospitalscreen/hospitalView';
 const Stack = createNativeStackNavigator();
 
 
@@ -47,6 +50,9 @@ export default function App() {
         <Stack.Screen name="Aboutus" component={AboutUsScreen} />
         <Stack.Screen name="chatbot" component={ChatBot} />
 
+        <Stack.Screen name="ProfileScreen" component={ProfileScreen} options={{headerShown: false}}/>
+        <Stack.Screen name="HospitalFilterScreen" component={HospitalFilterScreen}/>
+        <Stack.Screen name="HospitalView" component={Hospitalview} options={{headerShown: false}}/>
         
         <Stack.Screen name="SymptomsScreen" component={SymptomsScreen}/>
         <Stack.Screen name="RegisterScreen" component={RegisterScreen} options={{headerShown: false}}/>

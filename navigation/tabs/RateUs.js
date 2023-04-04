@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text, View, StyleSheet,Image,TouchableOpacity,Button,TextInput,KeyboardAvoidingView } from 'react-native';
+import { Text, View, StyleSheet,Image,TouchableOpacity,Button,TextInput,KeyboardAvoidingView ,ToastAndroid} from 'react-native';
 import Constants from 'expo-constants';
 import RadioGroup from 'react-native-radio-buttons-group';
 
@@ -7,20 +7,29 @@ import db from '../../firebase';
 import { getDatabase, ref, onValue,set} from "firebase/database";
 
 export default function RateUs() {
-
-  const [reviewCount,setReviewCount] = React.useState(1);
   const [selectedRadioValue, setSelectedRadioValue] = React.useState(null);
   const [defaultstar,newstar] = React.useState(2);
   const [max,setmax] = React.useState([1,2,3,4,5]);
   const [review, setReview] = React.useState('');
+  const [databaseReviewCount,setDatabaseReviewCount] = React.useState(0);
 
   const handleRadioSelect = (value) => {
     setSelectedRadioValue(value);
   };
 
-  const dataAddOn = () =>{
-    
-    var key = `Review${reviewCount}`
+  const Fetchdata = async ()=>{
+    const db = getDatabase();
+    const starCountRef = ref(db, 'Feedback/');
+    onValue(starCountRef, (snapshot) => {
+      const data = snapshot.val();
+      // console.log(Object.keys(data).length);
+      setDatabaseReviewCount(Object.keys(data).length);
+    });
+  }
+
+  const dataAddOn = async () =>{
+    const ok = await Fetchdata();
+    var key = `Review${databaseReviewCount}`
     // console.log(key,reviewCount);
     // console.log(defaultstar);
     // console.log(`Feedback/${key}`);
@@ -31,7 +40,8 @@ export default function RateUs() {
     recommended:  selectedRadioValue,
     reviewMsg: review,
     });
-    setReviewCount(reviewCount+1);
+    ToastAndroid.show('Review Submitted Successfully!', ToastAndroid.SHORT);  
+     
     newstar(2);   
     setSelectedRadioValue(null);
     setReview('');
