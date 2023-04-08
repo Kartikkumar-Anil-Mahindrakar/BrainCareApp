@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View,StyleSheet,Dimensions,} from 'react-native';
+import {View,StyleSheet,Dimensions, Alert,} from 'react-native';
 
 import {Avatar,Title,Caption,Paragraph,Drawer,Text,TouchableRipple,Switch} from 'react-native-paper';
 import {DrawerContentScrollView,DrawerItem} from '@react-navigation/drawer';
@@ -9,6 +9,12 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import MainContainer from '../navigation/MainContainer';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+
+import { getAuth, signOut } from "firebase/auth";
+
+import db from '../firebase';
+import { getDatabase, ref, onValue,set} from "firebase/database";
+
 
 const vw = Dimensions.get('window').width/100;
 const vh = Dimensions.get('window').height/100;
@@ -20,18 +26,52 @@ const SideMenu = (props) => {
     const toggleTheme = () => {
         setcDarkTheme(!cDarkTheme);
     }
+    const [userState,setUserState] = React.useState({});
+
+    const fetchData = async ()=>{
+        const user = getAuth().currentUser;
+        const starCountRef = ref(db, 'Profile/'+user.uid);
+        onValue(starCountRef, (snapshot) => {
+          const data = snapshot.val();
+        //   setDatabaseReviewCount(Object.keys(data).length);
+        // for(const key of Object.keys(data)){
+        //     console.log(data[key].doctors)        
+        // }
+        setUserState(data);
+        });
+      }
+    
+      React.useEffect(() => {
+        fetchData();
+      
+        return () => {
+          
+        }
+      }, [])
+
+    const signoutHandler = ()=>{
+        const auth = getAuth();
+        signOut(auth).then(() => {
+        // Sign-out successful.
+            Alert.alert("You have been successfully LoggedOut")
+            props.navigation.replace('Login')
+        }).catch((error) => {
+        // An error happened.
+            console.log(error);
+        });
+    }
     return (
         <View style={{flex:1}}> 
             <DrawerContentScrollView {...props}> 
                 <View style={styles.userInfoSection}>
                     <TouchableOpacity onPress={()=>{props.navigation.navigate('ProfileScreen')}} style={{flexDirection:'row',marginTop: 15}} >
                         <Avatar.Image 
-                            source={require('../assets/icon.png')}
+                            source={userState.profileUrl ? {uri:userState.profileUrl}:require('../assets/images/newuser.png')}
                             size={50}
                         />
                         <View style={{marginLeft:15, flexDirection:'column'}}>
-                            <Title style={styles.title}> Kartikkumar </Title>
-                            <Caption style={styles.caption}>mahindrakar.com</Caption>
+                            <Title style={styles.title}> {userState.name} </Title>
+                            <Caption style={styles.caption}>{userState.email}</Caption>
                         </View>
                     </TouchableOpacity>
                                       
@@ -41,7 +81,7 @@ const SideMenu = (props) => {
                     <DrawerItem 
                         icon = { ()=> ( <Icon name="cloud" style={{fontSize:2.8*vh,color:'grey', width:30}} />  ) } 
                         label="Read About"
-                        onPress={ ()=>{props.navigation.navigate('EntryScreen')} }
+                        onPress={ ()=>{props.navigation.navigate('Aboutus')} }
                     />
 
                     <DrawerItem 
@@ -59,11 +99,11 @@ const SideMenu = (props) => {
                         label="Rate Us"
                         onPress={ ()=>{props.navigation.navigate('RateUs')} }
                     />
-                     <DrawerItem 
+                     {/* <DrawerItem 
                         icon = { ()=> ( <Icon name="account-check-outline" style={{fontSize:2.8*vh,color:'grey', width:30}} />  ) } 
                         label="Support"
                         onPress={ ()=>{props.navigation.navigate('Support')} }
-                    />
+                    /> */}
                 </Drawer.Section>
 
                 {/*<Drawer.Section title="Choose Preferences">
@@ -82,7 +122,7 @@ const SideMenu = (props) => {
                 <DrawerItem 
                     icon = { ()=>( <Icon name="exit-to-app"  style={{fontSize:2.8*vh,color:'grey'}} /> ) }
                     label="Sign Out"
-                    onPress={()=>{props.navigation.navigate('Login')} }
+                    onPress={()=>{signoutHandler()} }
                 />
             </Drawer.Section>
         </View>

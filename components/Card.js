@@ -111,7 +111,7 @@ const serviceRecommend = (temp,name)=>{
           style={{height:15,width:15,marginTop:3}}
            source={require("../assets/pin.png")}/>
           </View>
-           <View style={{marginLeft:10,flexDirection:"column",alignItem:"center",justifyContent:"center"}}><Text style={styles.userText}>{props.data.city}</Text></View>
+           <View style={{marginLeft:10,flexDirection:"column",alignItem:"center",justifyContent:"center"}}><Text style={styles.userText}>{props.data.location}</Text></View>
           </View>
        </View>
       </View>
@@ -128,7 +128,7 @@ const serviceRecommend = (temp,name)=>{
         </View>
         <View style={{paddingHorizontal:30,justifyContent:"center",alignItem:"center"}}>
         <View>
-        <Text style={{fontSize:13,textAlign:"justify"}}>{props.data.review}</Text>
+        <Text style={{fontSize:13,textAlign:"justify"}}>{props.data.reviewMsg}</Text>
         </View>
         </View>
         <View style={{flexDirection:"row",justifyContent:"flex-end"}}>
@@ -159,7 +159,7 @@ const serviceRecommend = (temp,name)=>{
 const styles = StyleSheet.create({
   
   card: {
-    height: 250,
+    height: 200,
     backgroundColor: 'white',
     elevation: 10,
     width: width - 40,
@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
   
   reviewContainer:{
     width:width-40,
-    height:280,
+    maxHeight:200,
     flexDirection:"column",
     backgroundColor:"#FFFFFF",
     borderWidth:0,
@@ -246,7 +246,7 @@ const styles = StyleSheet.create({
     elevation:20,
     marginRight:20,
     borderRadius:10,
-    backgroundColor:"yellow"
+    backgroundColor:"white"
     
   },  
 

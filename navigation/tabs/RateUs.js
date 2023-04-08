@@ -1,10 +1,11 @@
 import * as React from 'react';
-import { Text, View, StyleSheet,Image,TouchableOpacity,Button,TextInput,KeyboardAvoidingView ,ToastAndroid} from 'react-native';
+import { Text, View, StyleSheet,Image,TouchableOpacity,Button,TextInput,KeyboardAvoidingView ,ToastAndroid, Alert} from 'react-native';
 import Constants from 'expo-constants';
 import RadioGroup from 'react-native-radio-buttons-group';
 
 import db from '../../firebase';
-import { getDatabase, ref, onValue,set} from "firebase/database";
+import { getDatabase, ref, onValue,set,push} from "firebase/database";
+import { getAuth } from 'firebase/auth';
 
 export default function RateUs() {
   const [selectedRadioValue, setSelectedRadioValue] = React.useState(null);
@@ -12,39 +13,46 @@ export default function RateUs() {
   const [max,setmax] = React.useState([1,2,3,4,5]);
   const [review, setReview] = React.useState('');
   const [databaseReviewCount,setDatabaseReviewCount] = React.useState(0);
+  const [name, setName] = React.useState('');
+  const [location, setLocation] = React.useState('');
 
   const handleRadioSelect = (value) => {
     setSelectedRadioValue(value);
   };
 
   const Fetchdata = async ()=>{
-    const db = getDatabase();
-    const starCountRef = ref(db, 'Feedback/');
+    const user = getAuth().currentUser;
+    const starCountRef = ref(db, 'Profile/'+user.uid);
     onValue(starCountRef, (snapshot) => {
       const data = snapshot.val();
-      // console.log(Object.keys(data).length);
-      setDatabaseReviewCount(Object.keys(data).length);
+      setName(data.name);
+      setLocation(data.location);
+    },{
+      onlyOnce:true
     });
+  
   }
 
+  React.useEffect(() => {
+    const ok = Fetchdata();
+    return () => {     
+    }
+  }, [])
+  
   const dataAddOn = async () =>{
-    const ok = await Fetchdata();
-    var key = `Review${databaseReviewCount}`
-    // console.log(key,reviewCount);
-    // console.log(defaultstar);
-    // console.log(`Feedback/${key}`);
-    
-    // console.log(review);
-    set(ref(db,`Feedback/${key}`),{
-    rating: defaultstar,
-    recommended:  selectedRadioValue,
-    reviewMsg: review,
-    });
-    ToastAndroid.show('Review Submitted Successfully!', ToastAndroid.SHORT);  
-     
-    newstar(2);   
-    setSelectedRadioValue(null);
-    setReview('');
+      push(ref(db,`Feedback/`),{
+        name:name,
+        location:location,
+        rating: defaultstar,
+        recommended:  selectedRadioValue,
+        reviewMsg: review,
+        });
+      ToastAndroid.show('Review Submitted Successfully!', ToastAndroid.SHORT);  
+      Alert.alert("Your review has been submited successfully.");
+      newstar(2);   
+      setSelectedRadioValue(null);
+      setReview('');
+      setDatabaseReviewCount(databaseReviewCount+1);
   }
 
 
@@ -126,7 +134,7 @@ export default function RateUs() {
     <View style={{alignItems:"center",marginBottom:20,marginTop:50}}>
     <View>
     <Text style={{fontSize:18,fontWeight:"bold",color:"grey"}}>
-    Would you recommend our services?
+    Would you recommend our App?
     </Text>
     </View>
       <RadioButtons/>

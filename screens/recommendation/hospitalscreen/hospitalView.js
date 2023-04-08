@@ -1,7 +1,7 @@
 import * as React from 'react';
 import  { useState, useRef ,useEffect} from 'react';
 
-import { Text, View, StyleSheet,Image,TouchableOpacity,ScrollView} from 'react-native';
+import { Text, View, StyleSheet,Image,TouchableOpacity,ScrollView,Dimensions} from 'react-native';
 
 
 // You can import from local files
@@ -14,7 +14,7 @@ import RecomendedHosptialsCarousel from './RecomendedHosptialsCarousel';
 
 
 const rating =4;
-
+const {width} = Dimensions.get("screen");
 const hospitalData =[{hospitalName:"Tata Hopital",hospitalImg:require("../../../assets/hospitalscreenimages/hopital-img.jpg"), address:" A/105, Blue Garden, Blue Road, Mumbai-17 ", email:"abcd@gmail.com",timing:" All Days - 10:00 AM to 10:00 PM",rating:"4",phoneNo:`tel:${7506183558}`},
 ]
 
@@ -50,7 +50,90 @@ const starRating = (rating)=>{
   return imgArr;
 }
 
+const FixedHospitalDetails = ({name,address,rating,type})=>{
+  return (
+       
+      <View style={styles.fixedHospitalInfo}>
 
+       <View style={styles.fixedHospitalDataContainer}>
+        <View style={{justifyContent:"center",alignItems:"center",padding:10}}>
+          <Text style={{textAlign:"center",fontSize:20,fontWeight:"bold"}}> 
+              {name}
+          </Text>
+        </View>
+
+      <View style={{...styles.fixedHospitalData}}>
+          <View style={{flexDirection:"column",alignItems:"center",justifyContent:"center",padding:10}}>
+            <Image
+            style={{width:25,height:25}}
+            source={require("../../../assets/hospitalscreenimages/location.png")}
+            />
+          </View>
+       <View style={{flexDirection:"column",alignItems:"center",justifyContent:"center",padding:10}}>
+                <Text>
+               {address}
+              </Text>
+          </View>
+      </View>
+      
+
+      
+
+
+         <View style={{...styles.fixedHospitalData}}>
+          <View style={{flexDirection:"column",alignItems:"center",justifyContent:"center",padding:10}}>
+            {/* <Image
+            style={{width:25,height:25}}
+            source=''
+            /> */}
+            <Text>Type:</Text>
+          </View>
+         <View style={{flexDirection:"column",justifyContent:"center",padding:5}}>
+                <Text>
+                    {type}
+              </Text>
+          </View>
+      </View>
+
+
+
+      <View style={{...styles.fixedHospitalData}}>
+            <View style={{flexDirection:"column",alignItems:"center",justifyContent:"center",padding:10}}>
+              <Image
+              style={{width:25,height:25}}
+              source={require("../../../assets/hospitalscreenimages/clock.png")}
+              />
+            </View>   
+            <View style={{flexDirection:"column",justifyContent:"center",width:"90%",padding:10}}>    
+                  <Text>
+                      All Days - 10:00 AM to 10:00 PM
+                </Text>
+            </View>
+        </View>
+
+
+
+
+
+        <View style={{...styles.fixedHospitalData}}>
+          <View style={{flexDirection:"column",alignItems:"center",justifyContent:"center",padding:10}}>
+            <View style={{flexDirection:"column",alignItems:"center",justifyContent:"center",width:30,height:30}}>
+              <Text style={{fontSize:14,fontWeight:"bold"}}>{rating}/5</Text>   
+            </View>
+          </View>
+          <View style={{flexDirection:"column",justifyContent:"center",width:"90%",padding:10}}>
+                <View style={{flexDirection:"row"}}>
+                {starRating(rating)}
+                </View>
+          </View>
+        </View>
+      </View>
+       
+
+        <View style={{height:0.5,backgroundColor:"grey"}}></View>
+    </View>
+  )
+}
 
 const  StatisticsCard = (props)=>{
      return(
@@ -86,9 +169,11 @@ const  StatisticsCard = (props)=>{
 
 const Hospitalview =({route,navigation}) =>{
  
- const {address,ambulance,beds,city,doctors,facilites, healthdepartments,imgUrl,name,phone,rating} = route.params.currentHospital;
+ const {address,ambulance,beds,city,doctors,facilites,type, healthdepartments,imgUrl,name,phone,rating} = route.params.currentHospital;
   const [hospitals,setHospitals] = useState(route.params.hospitals);
   const [recommended, setRecommended] = useState([]);
+  const [showTopFixHospitalDetails,setShowTopFixedHospitalDetails] = useState(false);
+  
   function recommendHospitals(userPreferences) {
     
     let vec1Magnitude = 0;
@@ -120,30 +205,39 @@ const Hospitalview =({route,navigation}) =>{
     });
 
   // sort hospitals by similarity score and return top 5
-  const recommendedHospitals = similarityScores.sort((a, b) => b.similarityScore - a.similarityScore).slice(0, 2).map(ele => ele.hospital);
+  const recommendedHospitals = similarityScores.sort((a, b) => b.similarityScore - a.similarityScore).slice(0, 4).map(ele => ele.hospital);
   return recommendedHospitals;
 }
   useEffect(()=>{
     const recommended = recommendHospitals(route.params.currentHospital);
-    console.log(recommended)
+    // console.log(recommended)
     setRecommended(recommended);
   },[])
+
+  const handleScrollEvent = (event)=>{
+    // console.log(event.nativeEvent.contentOffset.y);
+    if(event.nativeEvent.contentOffset.y >= 300){
+      setShowTopFixedHospitalDetails(true);
+    }else{
+      setShowTopFixedHospitalDetails(false);
+    }
+  }
   
 
   return(
 
  <View style={styles.container}>
-    <ScrollView style={{ flexGrow: 1 }}
-   >  
+  { showTopFixHospitalDetails && <FixedHospitalDetails name={name} address={address} type={type} rating={rating}/>}
+    <ScrollView onScroll={handleScrollEvent} style={{ flexGrow: 1 }}>  
 
     <View style={styles.headerImage}>
       <Image
       style={{width:400,height:400,borderRadius:10}}
       source={{uri:imgUrl}}
       />
-      </View> 
-      
-     <View style={styles.hopitalViewConatiner}>
+    </View> 
+    
+    <View style={styles.hopitalViewConatiner}>
        
        <View style={styles.hospitalInfo}>
 
@@ -174,35 +268,34 @@ const Hospitalview =({route,navigation}) =>{
 
          <View style={{...styles.hospitalData}}>
           <View style={{flexDirection:"column",alignItems:"center",justifyContent:"center",padding:10}}>
-            <Image
+            {/* <Image
             style={{width:25,height:25}}
-            source={require("../../../assets/hospitalscreenimages/gmail.png")}
-            />
+            source=''
+            /> */}
+            <Text>Type:</Text>
           </View>
-         <View style={{flexDirection:"column",justifyContent:"center",padding:10}}>
-                <TouchableOpacity onPress={() => Linking.openURL(`mailto:kshirsagarsomesh08@gmail.com`)} >
+         <View style={{flexDirection:"column",justifyContent:"center",padding:5}}>
                 <Text>
-                    abcd@gmail.com
-              </Text>
-              </TouchableOpacity>
-          </View>
-      </View>
-
-
-
-  <View style={{...styles.hospitalData}}>
-          <View style={{flexDirection:"column",alignItems:"center",justifyContent:"center",padding:10}}>
-            <Image
-            style={{width:25,height:25}}
-            source={require("../../../assets/hospitalscreenimages/clock.png")}
-            />
-          </View>   
-     <View style={{flexDirection:"column",justifyContent:"center",width:"90%",padding:10}}>    
-                <Text>
-                    All Days - 10:00 AM to 10:00 PM
+                    {type}
               </Text>
           </View>
       </View>
+
+
+
+      <View style={{...styles.hospitalData}}>
+            <View style={{flexDirection:"column",alignItems:"center",justifyContent:"center",padding:10}}>
+              <Image
+              style={{width:25,height:25}}
+              source={require("../../../assets/hospitalscreenimages/clock.png")}
+              />
+            </View>   
+            <View style={{flexDirection:"column",justifyContent:"center",width:"90%",padding:10}}>    
+                  <Text>
+                      All Days - 10:00 AM to 10:00 PM
+                </Text>
+            </View>
+        </View>
 
 
 
@@ -211,20 +304,19 @@ const Hospitalview =({route,navigation}) =>{
         <View style={{...styles.hospitalData}}>
           <View style={{flexDirection:"column",alignItems:"center",justifyContent:"center",padding:10}}>
             <View style={{flexDirection:"column",alignItems:"center",justifyContent:"center",width:30,height:30}}>
-            <Text style={{fontSize:14,fontWeight:"bold"}}>{rating}/5</Text>   
+              <Text style={{fontSize:14,fontWeight:"bold"}}>{rating}/5</Text>   
+            </View>
           </View>
-          </View>
-      <View style={{flexDirection:"column",justifyContent:"center",width:"90%",padding:10}}>
+          <View style={{flexDirection:"column",justifyContent:"center",width:"90%",padding:10}}>
                 <View style={{flexDirection:"row"}}>
                 {starRating(rating)}
                 </View>
           </View>
+        </View>
       </View>
-       </View>
        
 
-        <View style={{height:0.5,backgroundColor:"grey"}}>
-          </View>
+        <View style={{height:0.5,backgroundColor:"grey"}}></View>
 
        <FacilityContainer facilites={facilites} />
 
@@ -290,6 +382,7 @@ const styles = StyleSheet.create({
         // alignItems:"center",
       justifyContent:"flex-start",
         //  backgroundColor:"purple",
+        
        
     },
     
@@ -310,21 +403,45 @@ const styles = StyleSheet.create({
        backgroundColor:"#F9F9F9",
       position:"relative",
       marginTop:300,
+      height:1300
+
     },
-    
+    fixedHospitalInfo:{
+      borderTopLeftRadius:30,
+      borderTopRightRadius:30,
+       backgroundColor:"#D0E0EF",
+      position:"absolute",
+      marginTop:0,
+      height:200,
+      width,
+      zIndex:99
+
+    },
+    fixedHospitalDataContainer:{
+      flexDirection:"column",
+       backgroundColor:"#B4E4FF",
+       borderTopLeftRadius:20,
+     borderTopRightRadius:20,
+     
+   },
     hospitalDataContainer:{
        flexDirection:"column",
-        backgroundColor:"#F9F9F9",
+        backgroundColor:"#B4E4FF",
         borderTopLeftRadius:30,
       borderTopRightRadius:30,
+      
+    },
+    fixedHospitalData:{
+      flexDirection:"row",
+      alignItems:"center",
+      justifyContent:"flex-start",
+      backgroundColor:"#D0E0EF",   
     },
     hospitalData:{
-           flexDirection:"row",
-           alignItems:"center",
-           justifyContent:"flex-start",
-             backgroundColor:"#F9F9F9",
-          
-         
+      flexDirection:"row",
+      alignItems:"center",
+      justifyContent:"flex-start",
+      backgroundColor:"#D0E0EF",   
     },
    
      statisticsContainer:{

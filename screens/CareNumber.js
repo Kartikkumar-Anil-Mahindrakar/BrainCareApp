@@ -1,8 +1,15 @@
 import { StyleSheet, Text, View,Image } from 'react-native'
-import React, {useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 // import TransferItem from './transferItem'
 // import Spacer from '../../../components/spacer'
 import { Ionicons } from '@expo/vector-icons';
+
+
+import { getAuth } from "firebase/auth";
+import db from '../firebase';
+import { getDatabase, ref, onValue,set} from "firebase/database";
+
+
 
 
 const Spacer = ({width = 0, height = 0}) => {
@@ -17,10 +24,10 @@ const TransferItem = (props) => {
   return (
     <View style={[styles.container,
          { 
-             borderBottomLeftRadius: props.data.isSending ?  15: 15,
-             borderBottomRightRadius: props.data.isSending ? 15 : 15,
-             borderTopLeftRadius: props.data.isSending ? 15 : 15,
-             borderTopRightRadius: props.data.isSending ? 15 : 15,
+             borderBottomLeftRadius:  15,
+             borderBottomRightRadius:  15,
+             borderTopLeftRadius:  15,
+             borderTopRightRadius: 15,
              
              }]}>
 
@@ -28,7 +35,7 @@ const TransferItem = (props) => {
       
       <View style={styles.row}>
           <View>
-          <Text style={styles.price}>{props.data.price}</Text>
+          <Text style={styles.price}>{props.value}+</Text>
         
             <Text style={styles.desc}>{props.data.heading}</Text>
               
@@ -41,20 +48,39 @@ const TransferItem = (props) => {
 }
 
 const CareNumber = (props) => {
+  const [appDetails, setAppDetails] = useState({})
+
+  const fetchData = async ()=>{
+    const starCountRef = ref(db, 'App_Details');
+    onValue(starCountRef, (snapshot) => {
+      const data = snapshot.val();
+      setAppDetails(()=>data);
+      // console.log(data)
+    },{
+      onlyOnce:true,
+    });
+  }
+  useEffect(() => {
+    fetchData();
+    
+    return () => { 
+    }
+  }, [])
+
   return ( 
     <>
     <View style={{flexDirection:"row",alignItems: "center",justifyContent: "space-evenly"}}>
-      <TransferItem data = {props.data[0] } />
+      <TransferItem data = {props.data[0] } value={appDetails.Patients_visited} />
       <Spacer height={15} />
       
-      <TransferItem data = { props.data[1] } />
+      <TransferItem data = { props.data[1] } value={appDetails.Doctors}/>
       
     </View>
     <View style={{flexDirection:"row",alignItems: "center",justifyContent: "space-evenly"}}>
-      <TransferItem data = {props.data[2] } />
+      <TransferItem data = {props.data[2] } value={appDetails.Tumors_detected} />
       <Spacer height={15} />
       
-      <TransferItem data = { props.data[3] } />
+      <TransferItem data = { props.data[3] } value={appDetails.Hospitals_registered} />
       
     </View>
     </>
@@ -92,7 +118,7 @@ const styles = StyleSheet.create({
     },
     price: {
       marginTop:8,
-        fontSize: 12,
+        fontSize: 15,
         fontWeight: 'bold',
         
     },

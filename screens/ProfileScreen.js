@@ -2,9 +2,14 @@ import * as React from 'react';
 import { Text, View, StyleSheet,Image,Button,TouchableOpacity,ScrollView,TextInput,Alert} from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 import * as ImagePicker from 'expo-image-picker';
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
+// import {DateTimePickerAndroid} from '@react-native-community/datetimepicker';
 import moment from 'moment';
 import { AntDesign } from '@expo/vector-icons';
+
+
+import { getAuth } from "firebase/auth";
+import db from '../firebase';
+import { getDatabase, ref, onValue,set} from "firebase/database";
 
 
 const ProfileScreen = () =>{
@@ -19,22 +24,69 @@ const ProfileScreen = () =>{
   const [oldweight,newweight] = React.useState("Not Entered");
   const [oldstatus,newstatus] = React.useState("Not Entered");
   const [oldbg,newbg] = React.useState("Not Entered");
+  const [name, setName] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const [phone, setPhone] = React.useState(0);
+  const [location, setlocation] = React.useState("");
 
-  // All about data picker
- const [selectedDate, setSelectedDate] = React.useState();
-  const [isDatePickerVisible, setDatePickerVisibility] = React.useState(false);
-  const showDatePicker = () => {
-    setDatePickerVisibility(true);
-  };
-  const hideDatePicker = () => {
-    setDatePickerVisibility(false);
-  };
-  const handleConfirm = (date) => {
-    setSelectedDate(date);
-    const formattedDate = moment(date).format("DD-MM-YYYY");
-    newdob(formattedDate);
-    hideDatePicker();
-  };
+
+  const fetchData = async ()=>{
+    const user = getAuth().currentUser;
+    const starCountRef = ref(db, 'Profile/'+user.uid);
+    onValue(starCountRef, (snapshot) => {
+      const data = snapshot.val();
+    //   setDatabaseReviewCount(Object.keys(data).length);
+    // for(const key of Object.keys(data)){
+    //     console.log(data[key].doctors)        
+    // }
+    setName(data.name);
+    setEmail(data.email);
+    setlocation(data.location || "");
+    setPhone(data.phone || 0);
+    newheight(data.height || "Not Entered");
+    newweight(data.weight || "Not Entered");
+    newstatus(data.status || "Not Entered");
+    newbg(data.bg || "Not Entered");
+    setSelectedValue(data.gender || "Not Entered");
+    newvalue({
+      name: data.name,
+      email: data.email,
+      phone: data.phone || 0,
+      image: data.image || "Not Entered",
+      location: data.location || "Not Entered",
+      gender:data.gender || "Not Entered",
+      dob: data.dob || "Not Entered",
+      bg: data.bg || "Not Entered",
+      height: data.height || "Not Entered",
+      weight: data.weight || "Not Entered",
+      status: data.status || "Not Entered",
+    })
+    });
+  }
+  React.useEffect(() => {
+    fetchData();
+    // console.log(userState)
+    
+    return () => { 
+    }
+  }, [])
+  
+
+//   // All about data picker
+//  const [selectedDate, setSelectedDate] = React.useState(new Date());
+//   const [isDatePickerVisible, setDatePickerVisibility] = React.useState(false);
+//   const showDatePicker = () => {
+//     setDatePickerVisibility(true);
+//   };
+//   const hideDatePicker = () => {
+//     setDatePickerVisibility(false);
+//   };
+//   const handleConfirm = (date) => {
+//     setSelectedDate(date);
+//     const formattedDate = moment(date).format("DD-MM-YYYY");
+//     newdob(formattedDate);
+//     hideDatePicker();
+//   };
 
   const heightOptions = [];
   for (let i = 100; i <= 210; i++) {
@@ -47,25 +99,10 @@ const ProfileScreen = () =>{
   }
 
  
-  const [oldvalue,newvalue] = React.useState({
-      name: "User",
-      email: "Not Entered",
-      phone: "Not Entered",
-      image: "Not Entered",
-      location: "Not Entered",
-      gender:"Not Entered",
-      dob:"Not Entered",
-      bg:"Not Entered",
-      height:"Not Entered",
-      weight:"Not Entered",
-      status:"Not Entered"})
+  const [oldvalue,newvalue] = React.useState({})
 
 
   {/*Content added from editscreen by kartik starts here */}
-  const [name, setName] = React.useState("");
-  const [email, setEmail] = React.useState("");
-  const [phone, setPhone] = React.useState("");
-  const [location, setlocation] = React.useState("");
 
   
   
@@ -90,10 +127,10 @@ const ProfileScreen = () =>{
       return;
     }
 
-    if (olddob !== "Not Entered" && !olddob.trim()) {
-      Alert.alert('Please Enter Date of birth');
-      return;
-    }
+    // if (olddob !== "Not Entered" && !olddob.trim()) {
+    //   Alert.alert('Please Enter Date of birth');
+    //   return;
+    // }
     if (oldheight !== "Not Entered" && !oldheight.toString().trim()) {
       Alert.alert('Please Enter Height');
       return;
@@ -111,31 +148,53 @@ const ProfileScreen = () =>{
       return;
     }
     newvalue({
-      name,
-      email,
-      phone,
+      name:name,
+      email:email,
+      phone:phone ? parseInt(phone) : phone,
       image:profileImage,
-      location,
+      location:location,
       gender:selectedValue,
-      dob:olddob,
+      bg:oldbg,
+      height:oldheight,
+      weight:oldweight,
+      status:oldstatus,
+    });
+    //this oldvalue here will get me all the profile details of the user
+    console.log({
+      name:name,
+      email:email,
+      phone:phone ? parseInt(phone) : phone,
+      image:profileImage,
+      location:location,
+      gender:selectedValue,
+      bg:oldbg,
+      height:oldheight,
+      weight:oldweight,
+      status:oldstatus,
+    });
+    const user = getAuth().currentUser;
+    set(ref(db,'Profile/'+user.uid+""),{
+      name:name,
+      email:email,
+      phone:phone ? parseInt(phone) : phone,
+      image:profileImage,
+      location:location,
+      gender:selectedValue,
       bg:oldbg,
       height:oldheight,
       weight:oldweight,
       status:oldstatus,
     })
-    //this oldvalue here will get me all the profile details of the user
-    console.log(oldvalue);
+    .then(()=>{
+      Alert.alert("Your profile has been updated!!")
+    })
+    .then(()=>{
+      newdisplay(true); 
+    })
+    .catch((error)=>{
+      console.log(error);
+    });
     
-    newdisplay(true); 
-
-
-    const values = {
-      uname: name,
-      uemail: email,
-      uphone: phone,
-      upimage: profileImage,
-      ulocation: location,
-    }
 
   };
 
@@ -204,7 +263,7 @@ const ProfileScreen = () =>{
 
     <View style={{marginLeft:10,flexDirection:"row",justifyContent:"space-between",alignItems:"center",flex:1}}>
     <View>
-    <Text style={{fontWeight:"bold"}}>{oldvalue.name}</Text>
+    <Text style={{fontWeight:"bold",fontSize:20}}>{oldvalue.name}</Text>
     </View>
 
     <View>
@@ -256,8 +315,8 @@ const ProfileScreen = () =>{
       <Text style={styles.labelforpage1}>Gender</Text>
         <Text style={styles.info}>{oldvalue.gender}</Text>
       <View  style={{height:1,backgroundColor:"#D3D3D3"}}></View>
-       <Text style={styles.labelforpage1}>Date of Birth</Text>
-        <Text style={styles.info}>{oldvalue.dob}</Text>
+       {/* <Text style={styles.labelforpage1}>Date of Birth</Text>
+        <Text style={styles.info}>{oldvalue.dob}</Text> */}
       <View  style={{height:1,backgroundColor:"#D3D3D3"}}></View>
       <Text style={styles.labelforpage1}>Blood Group</Text>
         <Text style={styles.info}>{oldvalue.bg}</Text>
@@ -294,27 +353,30 @@ const ProfileScreen = () =>{
       <View  style={{height:1,backgroundColor:"grey",marginTop:20}}></View>
       {
       <View style={{marginTop:20,justifyContent:"center",alignItems:"center"}}>
-        {profileImage && (
-          <TouchableOpacity onPress={handleImagePick}>
-            <Image
-              source={{ uri: profileImage }}
-              style={{
-                width: 150,
-                height: 150,
-                borderRadius: 75,
-                marginBottom: 20,
-              }}
-            />
-          </TouchableOpacity>   
-        )
+        {profileImage ? 
+          (
+            <TouchableOpacity onPress={handleImagePick}>
+              <Image
+                source={{ uri: profileImage }}
+                style={{
+                  width: 150,
+                  height: 150,
+                  borderRadius: 75,
+                  marginBottom: 20,
+                }}
+              />
+            </TouchableOpacity>   
+          ): 
+          (<View style={styles.inputContainerr}>
+              <TouchableOpacity onPress={handleImagePick}>
+                <Text style={styles.dropdown}>Choose Profile Image</Text>
+              </TouchableOpacity>
+          </View>
+          )
         }
       </View>
       }
-      <View style={styles.inputContainerr}>
-          <TouchableOpacity onPress={handleImagePick}>
-            <Text style={styles.dropdown}>Choose Profile Image</Text>
-          </TouchableOpacity>
-      </View>
+      
 
       <View style={styles.inputContainerr}>
           <Text style={styles.label}>Location</Text>
@@ -342,7 +404,6 @@ const ProfileScreen = () =>{
           <Text style={styles.label}>Email</Text>
           <TextInput
             style={styles.dropdown}
-            selectedText={email}
             onChangeText={setEmail}
             value={email}
             placeholder="Email"
@@ -353,9 +414,8 @@ const ProfileScreen = () =>{
           <Text style={styles.label}>Phone Number</Text>
           <TextInput
             style={styles.dropdown}
-            selectedText={phone}
             onChangeText={setPhone}
-            value={phone}
+            value={phone+""}
             placeholder="Phone"
             keyboardType="numeric"
           />
@@ -380,7 +440,7 @@ const ProfileScreen = () =>{
       </View>
 
 
-        <View style={styles.inputContainerr}>
+        {/* <View style={styles.inputContainerr}>
           <Text style={styles.label}>Date of Birth </Text>
    
           <TouchableOpacity onPress={()=>{showDatePicker()}}>
@@ -389,13 +449,19 @@ const ProfileScreen = () =>{
             {`${selectedDate? moment(selectedDate).format("MM/DD/YYYY"):olddob}`}
             </Text>
         </TouchableOpacity>
-      <DateTimePickerModal
-        isVisible={isDatePickerVisible}
-        mode="date"
-        onConfirm={handleConfirm}
-        onCancel={hideDatePicker}
-      />
-      </View>
+          {isDatePickerVisible &&
+            (
+              DateTimePickerAndroid.open({
+                  testID:"dateTimePicker",
+                  value:selectedDate,
+                  mode:'date',
+                  is24Hour:true,
+                  display:"default",
+                  onChange:{handleConfirm}
+              })
+          )
+          }
+      </View> */}
 
 
           <View style={styles.inputContainerr}>

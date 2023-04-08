@@ -2,8 +2,14 @@ import { Linking } from 'react-native';
 
 import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View,Image,SafeAreaView,ScrollView } from 'react-native';
 
-import React, { useState } from "react";
+import React, { useState ,useEffect} from "react";
 import Checkbox from "expo-checkbox";
+
+
+import { getAuth, signOut } from "firebase/auth";
+
+import db from '../firebase';
+import { getDatabase, ref, onValue,set,push} from "firebase/database";
 
 const ContactForm = ({ navigation }) => {
   const [name, setName] = useState("");
@@ -12,11 +18,45 @@ const ContactForm = ({ navigation }) => {
   const [message, setMessage] = useState("");
   const [agree, setAgree] = useState(false);
 
+
+    const fetchData = async ()=>{
+        const user = getAuth().currentUser;
+        const starCountRef = ref(db, 'Profile/'+user.uid);
+        onValue(starCountRef, (snapshot) => {
+          const data = snapshot.val();
+        //   setDatabaseReviewCount(Object.keys(data).length);
+        // for(const key of Object.keys(data)){
+        //     console.log(data[key].doctors)        
+        // }
+        setName(data.name);
+        setEmail(data.email);
+        setPhone(data.phone);
+        });
+      }
+
+      useEffect(() => {
+        fetchData();
+        
+        return () => {
+          
+        }
+      }, [])
+  
+
   const submit = () => {
     if (!name || !email || !phone || !message) {
       alert("Plzz fill all the fields");
     } else {
-      alert(`Thank You ${name}`);
+      push(ref(db,'Contact_Us/'),{
+        name,
+        email,
+        phone,
+        message
+        }).then(()=>{
+          setMessage("");
+          setAgree(false);
+          alert(`Thank You ${name}`);
+        });
       
     }
   };
@@ -62,8 +102,9 @@ const ContactForm = ({ navigation }) => {
         <TextInput
           style={styles.inputStyle}
           placeholder={"Enter Your Mobile No"}
-          value={phone}
+          value={phone+""}
           onChangeText={(phone) => setPhone(phone)}
+          keyboardType="numeric"
         />
       </View>
       <View style={{height:1,backgroundColor:"black"}}></View>

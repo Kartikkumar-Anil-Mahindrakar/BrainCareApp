@@ -1,5 +1,5 @@
 import React, { useState, useRef,useEffect } from 'react';
-import { Keyboard } from 'react-native';
+import { Keyboard,BackHandler,Alert } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -23,6 +23,9 @@ const Tab = createBottomTabNavigator();
 
 function MainContainer() {
   const [keyboardShown, setKeyboardShown] = useState(false);
+
+  
+
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -51,6 +54,9 @@ function MainContainer() {
   return (
       <Tab.Navigator
         initialRouteName={homeName}
+        listeners={{ focus: () => BackHandler.addEventListener('hardwareBackPress',handleBackButton)
+                      ,blur: () => BackHandler.removeEventListener('hardwareBackPress',handleBackButton)
+          }}
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;

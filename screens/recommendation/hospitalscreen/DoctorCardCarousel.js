@@ -40,7 +40,7 @@ const {width} = Dimensions.get('screen');
        <View style={{flexDirection:"row"}}>
 
 
-      <View style={{flexDirection:"column",justifyContent:"center",alignItems:"center"}}>
+      <View style={{flexDirection:"column",justifyContent:"center"}}>
        <View style={styles.doctorimg}>
        <Image
           style={{height:70,width:70}}
@@ -153,7 +153,7 @@ export default function DoctorCardCarousel({navigation,doctors}) {
      <FlatList
           snapToInterval={width-20}
           showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{paddingLeft: 15, paddingVertical: 5}}
+          contentContainerStyle={{paddingLeft: 15,paddingRight: 15, paddingVertical: 5}}
           horizontal
           data={doctors}
           renderItem={({item}) => <DoctorCard style={styles.shadowProp} doctor={item} key={item} navigation= {navigation} />}

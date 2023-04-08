@@ -4,7 +4,7 @@
 import './polyfills';
 
 import Constants from 'expo-constants';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import EntryScreen from './screens/EntryScreen';
@@ -35,6 +35,7 @@ import ProfileScreen from './screens/ProfileScreen';
 import HospitalFilterScreen from './screens/recommendation/HospitalFilterScreen';
 import Hospitalview from './screens/recommendation/hospitalscreen/hospitalView';
 const Stack = createNativeStackNavigator();
+import './ignoreWarnings';
 
 
 export default function App() {
@@ -50,8 +51,12 @@ export default function App() {
         <Stack.Screen name="Aboutus" component={AboutUsScreen} />
         <Stack.Screen name="chatbot" component={ChatBot} />
 
-        <Stack.Screen name="ProfileScreen" component={ProfileScreen} options={{headerShown: false}}/>
-        <Stack.Screen name="HospitalFilterScreen" component={HospitalFilterScreen}/>
+        <Stack.Screen name="ProfileScreen" component={ProfileScreen} options={{
+        headerShown: true,
+        headerTitle: 'Profile',
+        
+      }}/>
+        <Stack.Screen name="HospitalFilterScreen" component={HospitalFilterScreen} options={{headerShown: false}}/>
         <Stack.Screen name="HospitalView" component={Hospitalview} options={{headerShown: false}}/>
         
         <Stack.Screen name="SymptomsScreen" component={SymptomsScreen}/>
@@ -60,7 +65,7 @@ export default function App() {
         <Stack.Screen name="Splash" component={Splash} options={{headerShown: false}}/>
         <Stack.Screen name="Onboarding" component={Onboarding} options={{headerShown: false}}/>
         <Stack.Screen name="Login" component={Login} options={{headerShown: false}}/>
-        <Stack.Screen name="SignUp" component={SignUpScreen} />
+        <Stack.Screen name="SignUp" component={SignUpScreen} options={{headerShown: false}} />
         <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
         <Stack.Screen name="OtpVerfication" component={OtpVerification} />
 

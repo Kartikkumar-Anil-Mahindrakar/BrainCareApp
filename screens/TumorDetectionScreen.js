@@ -80,7 +80,7 @@ export default function TumorDetectionScreen({navigation}){
 
       
       // 192.168.92.16 ipconfig
-       return fetch(`http://192.168.229.162:8000/predict`, {
+       return fetch(`http://192.168.0.104:8000/predict`, {
         method: 'POST',
         headers: {
             Accept :'*/*',
@@ -88,7 +88,12 @@ export default function TumorDetectionScreen({navigation}){
         },
         body: bodyFormData,
       })
-        .then((response) =>response.json())
+        .then((response) =>{
+          if(response.status !== 200){
+            console.log("not connected to localhost");
+          }
+          return response.json()
+        })
         .then((response) => {
           console.log('response',JSON.stringify(response));
           resolve(response);
@@ -158,6 +163,7 @@ export default function TumorDetectionScreen({navigation}){
   const clearOutput = () => {
     setResult('');
     setImage('');
+    setLabel('');
   };
 
 
@@ -165,12 +171,14 @@ export default function TumorDetectionScreen({navigation}){
     // setImage(path);
     setLabel('Predicting...');
     setResult('');
+    
     const params = {
       uri: response.uri,
     };
     try{
 
         const res = await getPredication(params);
+        console.log(res+"res");
         
         console.log("OK",res.ismri);
         if(!res.ismri) {
@@ -238,6 +246,21 @@ export default function TumorDetectionScreen({navigation}){
             </Text>
           </Text>
         </View>
+        <View style={styles.btn}>  
+        <TouchableOpacity
+          activeOpacity={0.9}
+          onPress={() => {clearOutput()}}
+          style={styles.btnStyle}>
+          <Text style={{fontSize:20}}>Try Again</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          activeOpacity={0.9}
+          onPress={() => {navigation.navigate('HospitalFilterScreen')}}
+          style={styles.btnStyle}>
+          <Text style={{fontSize:20}}>View Hospitals</Text>
+        </TouchableOpacity>
+      </View>
         
       </>
       )) ||
@@ -245,24 +268,26 @@ export default function TumorDetectionScreen({navigation}){
           <>
           
           <Text style={styles.emptyText}>
-            Use below button to select a picture of a Brain Mri Image.
+            Use below button to select a Brain Mri Image.
           </Text>
-          </>
-        )}
-      <View style={styles.btn}>  
+          <View style={styles.btn}>  
         <TouchableOpacity
           activeOpacity={0.9}
           onPress={() => manageCamera('Photo')}
           style={styles.btnStyle}>
           <Text style={{fontSize:20}}>UPLOAD</Text>
         </TouchableOpacity>
-        <TouchableOpacity
+        
+        {/* <TouchableOpacity
           activeOpacity={0.9}
           onPress={() => {navigation.navigate('HospitalFilterScreen')}}
           style={styles.btnStyle}>
-          <Text style={{fontSize:20}}>Recommend Hospitals</Text>
-        </TouchableOpacity>
+          <Text style={{fontSize:20}}>View Hospitals</Text>
+        </TouchableOpacity> */}
       </View>
+          </>
+        )}
+      
     </View>
   );
 };

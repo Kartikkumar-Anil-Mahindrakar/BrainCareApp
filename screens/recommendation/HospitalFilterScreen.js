@@ -36,7 +36,6 @@ const HospitalFilterScreen = ({navigation}) => {
     const starCountRef = ref(db, 'Hospital_Data/');
     onValue(starCountRef, (snapshot) => {
       const data = snapshot.val();
-      console.log(Object.keys(data));
     //   setDatabaseReviewCount(Object.keys(data).length);
     // for(const key of Object.keys(data)){
     //     console.log(data[key].doctors)        

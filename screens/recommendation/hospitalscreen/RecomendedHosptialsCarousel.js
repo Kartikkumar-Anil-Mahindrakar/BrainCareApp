@@ -45,31 +45,32 @@ const {width} = Dimensions.get('screen');
 
  const HospitalCard =(props)=>{
     return(
-        <View style={{padding:8,width:300,height:150}}>
-          <TouchableOpacity style={{padding:15,height:'100%',flexDirection:"row",justifyContent:"space-between",alignItems:"center",alignContent:"center",backgroundColor:"#DAEAF1",borderRadius:10,shadowColor: '#748DA6',
-        shadowOffset: {width: -2, height: 4},
-        shadowOpacity: 0.2,
-        shadowRadius: 3}} onPress={()=>props.navigation.navigate("HospitalView",{currentHospital:props.currentHospital,hospitals:props.hospitals})}>
-        <View style={{alignItems:"center",justifyContent:"center",width:75}}> 
-    
-          <View  style={{backgroundColor:"#ECF9FF",borderRadius:15,justifyContent:"center",height:50,width:50,alignItems:"center"}}>
-          <Image source={{uri:props.image}} style={{height:60,width:60}}/>
+      <View style={{padding:8,width:350,height:150}}>
+          <TouchableOpacity style={{padding:0,flexDirection:"row",alignItems:"center",alignContent:"center",backgroundColor:"#EDF1D6",shadowColor: 'black',
+            shadowOffset: {width: -2, height: 4},
+            shadowOpacity: 0.2,
+            shadowRadius: 3,height:170,marginTop:20,borderRadius:30}}  onPress={()=>{props.navigation.replace("HospitalView",{currentHospital:props.currentHospital,hospitals:props.hospitals})}}>
+           
+
+              <View  style={{backgroundColor:"#ECF9FF",borderRadius:15,justifyContent:"center",height:50,width:50,alignItems:"center"}}>
+              <Image source={{uri:props.image}} style={{height:170,width:140,borderRadius:30,marginLeft:90,marginTop:0}}/>
+              </View>
+           
+
+              <View style={{width:180,justifyContent:"center",height:150,marginLeft:100}}> 
+              
+        <Text style={{fontWeight:"bold",fontSize:15,color:"black",width:150}}>{props.title}</Text>
+
+          <View>
+          <Text style={{fontSize:12,width:170}}>Location: {props.location.toUpperCase()}</Text>
+          <Text style={{fontSize:12,marginTop:5,width:170}}>Rating: {props.rating}★</Text>
+          <Text style={{fontSize:12,marginTop:5,width:170}}>Type: {props.type}</Text>
           </View>
-        </View> 
-    
-          <View style={{width:"70%",justifyContent:"center",alignItems:"center"}}> 
-          
-    <Text style={{fontWeight:"bold",marginBottom:5,fontSize:18,color:"black"}}>{props.title}</Text>
-    
-      <View>
-      <Text style={{fontSize:15}}>Location: {props.location.toUpperCase()}</Text>
-      <Text style={{fontSize:15,marginTop:5}}>Rating: {props.rating}★</Text>
-      </View>
-          </View>
-    
-          
-          </TouchableOpacity>
+              </View>
+      </TouchableOpacity>
+
         </View>
+
       );
  }
  
@@ -77,15 +78,15 @@ const {width} = Dimensions.get('screen');
 export default function RecomendedHosptialsCarousel({navigation,hospitals}) {
 
   return(
-   <View style={{flex:1,alignItems:"center",justifyContent:"center"}}>
-   <View style={{justifyContent:"center",alignItems:"center"}}>
+   <View style={{flex:1,alignItems:"center",justifyContent:"center",margin:0}}>
+   <View style={{justifyContent:"center",alignItems:"center",height:'100%'}}>
      <FlatList
-          snapToInterval={width-20}
+          snapToInterval={width-40}
           showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{paddingLeft: 15, paddingVertical: 5}}
+          contentContainerStyle={{paddingLeft: 15,paddingRight: 15, paddingVertical: 5}}
           horizontal
           data={hospitals}
-          renderItem={({item}) => <HospitalCard style={styles.shadowProp} key={item} navigation={navigation} title={item.name} image={item.imgUrl} location={item.city} rating={item.rating} currentHospital={item} hospitals={hospitals} />}
+          renderItem={({item}) => <HospitalCard style={styles.shadowProp} key={item} navigation={navigation} type={item.type} title={item.name} image={item.imgUrl} location={item.city} rating={item.rating} currentHospital={item} hospitals={hospitals} />}
           />
 
          

@@ -1,8 +1,11 @@
-import React,{useState} from 'react';
-import { StyleSheet, Text, ScrollView,View,StatusBar,Image,TextInput, TouchableOpacity } from 'react-native';
+import React,{useEffect, useState} from 'react';
+import { StyleSheet, Text, ScrollView,View,StatusBar,Image,TextInput, TouchableOpacity, Alert, ActivityIndicator ,Modal , BackHandler} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-
-
+// import auth from '@react-native-firebase/auth';
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import db from '../firebase';
+import { getDatabase, ref, onValue,set} from "firebase/database";
+import { useFocusEffect } from '@react-navigation/core';
 
 
 
@@ -14,8 +17,98 @@ const Login = ({navigation}) => {
         password:''
     })
 
+    useFocusEffect(() => {
+        const backAction = () => {
+          Alert.alert('Confirmation!', 'Do you want to close the app', [
+            {
+              text: 'Cancel',
+              onPress: () => null,
+              style: 'cancel',
+            },
+            {text: 'YES', onPress: () => BackHandler.exitApp()},
+          ]);
+          return true;
+        };
+    
+        const backHandler = BackHandler.addEventListener(
+          'hardwareBackPress',
+          backAction,
+        );
+    
+        return () => backHandler.remove();
+      });
+    
+    const [showModal,setShowModal] = useState(false);
+    const loginHandler = ()=>{
+        // if(formData.email.toLowerCase() !== 'admin@gmail.com'){
+        //     Alert.alert('Please enter registered mail id');
+        //     setformData({
+        //         email:'',
+        //         password:''
+        //     });
+        //     return;
+        // }else if(formData.password !== 'admin'){
+        //     Alert.alert('Invalid password');
+        //     setformData({
+        //         email:'',
+        //         password:''
+        //     });
+        //     return;
+        // }
+        setShowModal(true);
+        setTimeout(()=>{
+            const auth = getAuth();
+            signInWithEmailAndPassword(auth, formData.email, formData.password)
+            .then((userCredential) => {
+                // Signed in 
+                // const user = userCredential.user;
+                // console.log(user);
+                // ...
+                
+                const starCountRef = ref(db, 'App_Details/Patients_visited');
+                onValue(starCountRef, (snapshot) => {
+                    const data = snapshot.val();
+                    set(ref(db,'App_Details/Patients_visited'),data+1);
+                }, {
+                    onlyOnce: true
+                });
+    
+                
+            }).then(()=>{
+                setShowModal(false);
+                Alert.alert("Successful","SignIn Successfull");
+            })
+            .then(()=>{
+                navigation.replace('EntryScreen');
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                console.log(errorMessage);
+                setShowModal(false);
+                Alert.alert("Error",""+errorCode);
+            });
+        },1000)
+        
+        
+        
+    }
+
     return (
         <ScrollView style={{flex:1,backgroundColor:'#fff',flexDirection:'column'}}>
+             <Modal
+                transparent={true}
+                animationType={'none'}
+                visible={showModal}
+                style={{ zIndex: 1100 }}
+                onRequestClose={() => { }}>
+                <View style={styles.modalBackground}>
+                <View style={styles.activityIndicatorWrapper}>
+                    <ActivityIndicator size="large" animating={showModal} color="black" /> 
+                    <Text>Verifying..</Text> 
+                </View>
+                </View>
+            </Modal>
             <StatusBar barStyle="dark-content" backgroundColor="#fff" />
             {/* login form section */}
             <View style={{flex:2,flexDirection:'column',backgroundColor:'#fff',paddingTop:10,  paddingHorizontal:'3%'}} >         
@@ -39,7 +132,7 @@ const Login = ({navigation}) => {
                 <View style={{flexDirection:'row',justifyContent:'center',alignItems:'center',backgroundColor:'#ededed',width:'95%',borderRadius:10,height:60,paddingLeft:20}} >
                         <Icon name="envelope-o" size={22} color="#818181"/>
                         <TextInput
-                         onChangeText={(text)=>{setformData((prevState)=>({...prevState,email:text}))}}                       style={[styles.input,{placeholderTextColor: '#a5a5a5'},{fontWeight:'bold'}]} 
+                         onChangeText={(text)=>{setformData((prevState)=>({...prevState,email:text}))}} style={[styles.input,{placeholderTextColor: '#a5a5a5'},{fontWeight:'bold'}]} 
                         placeholder="Enter Email" 
                         placeholderTextColor="#818181" />
 
@@ -66,7 +159,7 @@ const Login = ({navigation}) => {
 
                     
 
-                    <TouchableOpacity onPress={()=>navigation.replace('EntryScreen')} style={{...styles.social_btn,backgroundColor:'#28388f'}} >
+                    <TouchableOpacity onPress={()=>{loginHandler()}} style={{...styles.social_btn,backgroundColor:'#28388f'}} >
                     <Text style={{width:'80%',textAlign:'center',fontSize:18,fontWeight: 'bold',color:'#fff'}} >Sign In</Text>
                     </TouchableOpacity>
 
@@ -107,6 +200,23 @@ const styles = StyleSheet.create({
         height:25,
         marginLeft:15
     },
+    modalBackground: {
+        flex: 1,
+        alignItems: 'center',
+        flexDirection: 'column',
+        justifyContent: 'space-around',
+        backgroundColor: '#rgba(0, 0, 0, 0.5)',
+        zIndex: 1000
+      },
+      activityIndicatorWrapper: {
+        backgroundColor: '#FFFFFF',
+        height: 100,
+        width: 100,
+        borderRadius: 10,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-around'
+      }
     
 });
 
