@@ -37,7 +37,7 @@ const {width} = Dimensions.get('screen');
     <View style={styles.container}>
       <View style={styles.doctorContainer}>
 
-       <View style={{flexDirection:"row"}}>
+       <View style={{flexDirection:"row" ,alignItems:"center"}}>
 
 
       <View style={{flexDirection:"column",justifyContent:"center"}}>
@@ -56,19 +56,19 @@ const {width} = Dimensions.get('screen');
 
          <View style={styles.doctorData}>
           
-           <View style={{flexDirection:"column",alignItems:"center",justifyContent:"center"}}><Text style={{...styles.doctorText,color:"black"}}>{"Dr. "+doctor.name}</Text></View>
+           <View style={{flexDirection:"column",alignItems:"flex-start",justifyContent:"center",width:"90%"}}><Text style={{...styles.doctorText,color:"black"}}>{"Dr. "+doctor.name}</Text></View>
           </View>
             
 
 
              <View style={styles.doctorData}>
            
-           <View style={{flexDirection:"column",alignItems:"flex-start",justifyContent:"center"}}><Text style={styles.doctorText}>{doctor.experience} Years Of Experience</Text></View>
+           <View style={{flexDirection:"column",alignItems:"flex-start",justifyContent:"center",width:"90%"}}><Text style={styles.doctorText}>{doctor.experience} Years Of Experience</Text></View>
           </View>
 
            <View style={styles.doctorData}>
            
-           <View style={{flexDirection:"column",alignItems:"flex-start",justifyContent:"center"}}><Text style={styles.doctorText}>{doctor.patientscured}+  Patients Treated</Text></View>
+           <View style={{flexDirection:"column",alignItems:"flex-start",justifyContent:"center",width:"90%"}}><Text style={styles.doctorText}>{doctor.patientscured}+  Patients Treated</Text></View>
           </View>
 
      
@@ -169,7 +169,8 @@ const styles = StyleSheet.create({
   container: {
     
     justifyContent: 'center',
-    paddingTop: Constants.statusBarHeight,
+    // paddingTop: 20,
+    // backgroundColor:"purple",
     
     paddingHorizontal: 8,
     alignItems:"center",
@@ -181,7 +182,7 @@ const styles = StyleSheet.create({
     height:180,
     flexDirection:"column",
     
-   borderWidth:1,
+   borderWidth:0.5,
     borderRadius:10,
     alignItems:"center",
     justifyContent:"flex-start",
@@ -220,13 +221,14 @@ const styles = StyleSheet.create({
   },
   doctorData:{
      maxWidth:228,
-   
+    // backgroundColor:"yellow",
     flexDirection:"row",
     marginTop:10,
     justifyContent:"flex-start",
     // paddingHorizontal:10
   },
   doctorText:{
+    
     fontSize:12,
     fontWeight:"bold",
 

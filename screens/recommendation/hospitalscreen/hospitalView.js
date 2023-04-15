@@ -249,7 +249,7 @@ const Hospitalview =({route,navigation}) =>{
             source={require("../../../assets/hospitalscreenimages/location.png")}
             />
           </View>
-       <View style={{flexDirection:"column",alignItems:"center",justifyContent:"center",padding:10}}>
+       <View style={{flexDirection:"column",alignItems:"center",justifyContent:"center",padding:10,maxWidth:"90%"}}>
                 <Text>
                {address}
               </Text>
@@ -266,7 +266,7 @@ const Hospitalview =({route,navigation}) =>{
             style={{width:25,height:25}}
             source=''
             /> */}
-            <Text>Type:</Text>
+            <Text style={{fontWeight:"bold"}}>Type:</Text>
           </View>
          <View style={{flexDirection:"column",justifyContent:"center",padding:5}}>
                 <Text>
@@ -349,6 +349,9 @@ const Hospitalview =({route,navigation}) =>{
            </Text>
 
        <DoctorCardCarousel doctors={doctors}/>
+       <View style={{height:1,backgroundColor:"#D8D8D8"}}>
+ 
+       </View>
        <Text style={{fontSize:20,fontWeight:"bold", marginTop:20,marginLeft:20}}>
              Recommended Hospitals
            </Text>
@@ -394,7 +397,7 @@ const styles = StyleSheet.create({
     hospitalInfo:{
       borderTopLeftRadius:30,
       borderTopRightRadius:30,
-       backgroundColor:"#fff",
+       backgroundColor:"#F9F9F9",
       position:"relative",
       marginTop:300,
       height:1300
@@ -403,7 +406,7 @@ const styles = StyleSheet.create({
     fixedHospitalInfo:{
       borderTopLeftRadius:30,
       borderTopRightRadius:30,
-       backgroundColor:"#fff",
+       backgroundColor:"#F9F9F9",
       position:"absolute",
       marginTop:0,
       height:200,
@@ -413,7 +416,7 @@ const styles = StyleSheet.create({
     },
     fixedHospitalDataContainer:{
       flexDirection:"column",
-       backgroundColor:"#fff",
+       backgroundColor:"#F9F9F9",
        borderTopLeftRadius:20,
      borderTopRightRadius:20,
      
@@ -429,13 +432,13 @@ const styles = StyleSheet.create({
       flexDirection:"row",
       alignItems:"center",
       justifyContent:"flex-start",
-      backgroundColor:"#fff",   
+      backgroundColor:"#F9F9F9",   
     },
     hospitalData:{
       flexDirection:"row",
       alignItems:"center",
       justifyContent:"flex-start",
-      backgroundColor:"#fff",   
+      backgroundColor:"#F9F9F9",   
     },
    
      statisticsContainer:{
@@ -443,7 +446,7 @@ const styles = StyleSheet.create({
        
         justifyContent:"center",
       marginTop:10,
-      backgroundColor:"#fff",
+      backgroundColor:"#F9F9F9",
     },
     statisticsCard:{
      flexDirection:"column",
