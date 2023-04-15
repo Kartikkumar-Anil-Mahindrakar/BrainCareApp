@@ -25,9 +25,9 @@ Hello Hello
 
 New message
 
-## Final changes by Kartik
+## Final changes by (15 April)
 
-Message by kartik
+Message by kartik Mahindrakar
 
 ## Final changes by Somesh(15 april)
 

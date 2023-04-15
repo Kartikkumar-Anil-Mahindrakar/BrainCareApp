@@ -3,6 +3,7 @@ import { Keyboard,BackHandler,Alert } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 // Screens
 import HomeScreen from './tabs/HomeScreen';
@@ -64,14 +65,17 @@ function MainContainer() {
 
             if (rn === homeName) {
               iconName = focused ? 'home' : 'home-outline';
-
+              return <Ionicons name={iconName} size={size} color={color} />;
             } else if (rn === reactAtUs) {
               iconName = focused ? 'list' : 'list-outline';
+              return <Ionicons name={iconName} size={size} color={color} />;
 
             } else if (rn === settingsName) {
               iconName = focused ? 'star' : 'star-outline';
+              return <Ionicons name={iconName} size={size} color={color} />;
             } else if(rn === tumorsName) {
               iconName = focused ? "bug":"bug";
+              // return <FontAwesomeIcon icon="fal-light fal-brain" style={{color: "#ff9500",}} />
             }
 
             // You can return any component that you like here!
