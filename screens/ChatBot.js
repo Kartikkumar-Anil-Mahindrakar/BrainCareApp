@@ -176,19 +176,22 @@ const ChatBot = ({navigation}) => {
       </KeyboardAvoidingView>
       ) : (
         // Render your floating button here
-        <TouchableOpacity
-          onPress={toggleChat}
-          style={styles.floatingWelcomeCard}
-          >
-            <View style={styles.cardContent}>
-              <View style={styles.cardHeader}>
-                <Text style={styles.cardBody}>Hello There 👋</Text>
-              </View>
-              <View style={{...styles.cardBody}}>
-                <Text style={{width:'100%',alignSelf:'center',color:'blue',textAlign:'center'}}>Chat Now</Text>
-              </View>
-            </View>
-        </TouchableOpacity>
+        // <TouchableOpacity
+        //   onPress={toggleChat}
+        //   style={styles.floatingWelcomeCard}
+        //   >
+        //     <View style={styles.cardContent}>
+        //       <View style={styles.cardHeader}>
+        //         <Text style={styles.cardBody}>Hello There 👋</Text>
+        //       </View>
+        //       <View style={{...styles.cardBody}}>
+        //         <Text style={{width:'100%',alignSelf:'center',color:'blue',textAlign:'center'}}>Chat Now</Text>
+        //       </View>
+        //     </View>
+        // </TouchableOpacity>
+        <>
+        
+        </>
       )}
        <TouchableOpacity
           onPress={toggleChat}

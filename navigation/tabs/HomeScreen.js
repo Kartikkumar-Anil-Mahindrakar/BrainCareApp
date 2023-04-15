@@ -100,6 +100,8 @@ export default function HomeScreen({ navigation }) {
   const [hospitals, setHospitals] = React.useState({});
   const [reviews, setReviews] = React.useState({});
   const [reviewKeys,setReviewKeys] = React.useState([]);
+  const [hospitalCount,setHospitalCount] = React.useState(0);
+  const [doctorCount,setDoctorCount] = React.useState(0);
   const {width} = Dimensions.get('screen');
   const callSymptomsScreen = ()=>{
     navigation.navigate('SymptomsScreen');
@@ -110,10 +112,17 @@ export default function HomeScreen({ navigation }) {
     onValue(starCountRef, (snapshot) => {
       const data = snapshot.val();
     //   setDatabaseReviewCount(Object.keys(data).length);
-    // for(const key of Object.keys(data)){
-    //     console.log(data[key].doctors)        
-    // }
+    let sumOfDoctors = 0;
+    for(const key of Object.keys(data)){
+
+        // console.log(data[key].doctors)        
+        if(data[key] && data[key].doctors){
+          sumOfDoctors+= data[key].doctors.length;
+        }
+    }
+    setHospitalCount(Object.keys(data).length);
     setHospitals(data);
+    setDoctorCount(sumOfDoctors);
     });
   }
   const fetchReviewData = async ()=>{
@@ -155,7 +164,7 @@ export default function HomeScreen({ navigation }) {
           />
           <ServiceSection callSymptomsScreen = {callSymptomsScreen} />
           <Text style={{fontWeight:"bold",marginLeft:'5%',marginTop:'5%',marginBottom:'5%'}}> Brain Care by Numbers</Text>
-          <CardNumber data={transfer} />
+          <CardNumber data={transfer} hospitalCount={hospitalCount} doctorCount={doctorCount} />
 
           <Text style={{fontWeight:"bold",marginLeft:'5%',marginTop:'5%'}}>User Reviews</Text>
           <FlatList
@@ -167,14 +176,7 @@ export default function HomeScreen({ navigation }) {
           renderItem={({item}) => <Card data={reviews[item]} key={item} navigation= {navigation} />}
           key="ok"
           />
-          
 
-          
-
-          
-        
-        
-        
           </ScrollView>
        </>
     );

@@ -80,7 +80,7 @@ const SideMenu = (props) => {
                 <Drawer.Section>
                     <DrawerItem 
                         icon = { ()=> ( <Icon name="cloud" style={{fontSize:2.8*vh,color:'grey', width:30}} />  ) } 
-                        label="Read About"
+                        label="Read About App"
                         onPress={ ()=>{props.navigation.navigate('Aboutus')} }
                     />
 

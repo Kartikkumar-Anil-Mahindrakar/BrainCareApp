@@ -48,7 +48,11 @@ export default function App() {
       <Stack.Navigator initialRouteName='Splash'>
         <Stack.Screen name="EntryScreen" component={EntryScreen} options={{headerShown: false}}/>
         <Stack.Screen name="Home" component={HomeScreen} options={{headerShown: false}}/>
-        <Stack.Screen name="Aboutus" component={AboutUsScreen} />
+        <Stack.Screen name="Aboutus" component={AboutUsScreen} options={{
+        headerShown: true,
+        headerTitle: 'About Us',
+        
+      }} />
         <Stack.Screen name="chatbot" component={ChatBot} />
 
         <Stack.Screen name="ProfileScreen" component={ProfileScreen} options={{

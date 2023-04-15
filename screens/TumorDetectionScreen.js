@@ -80,7 +80,7 @@ export default function TumorDetectionScreen({navigation}){
 
       
       // 192.168.92.16 ipconfig
-       return fetch(`http://192.168.0.104:8000/predict`, {
+       return fetch(`http://192.168.87.162:8000/predict`, {
         method: 'POST',
         headers: {
             Accept :'*/*',
@@ -278,12 +278,12 @@ export default function TumorDetectionScreen({navigation}){
           <Text style={{fontSize:20}}>UPLOAD</Text>
         </TouchableOpacity>
         
-        {/* <TouchableOpacity
+        <TouchableOpacity
           activeOpacity={0.9}
           onPress={() => {navigation.navigate('HospitalFilterScreen')}}
           style={styles.btnStyle}>
           <Text style={{fontSize:20}}>View Hospitals</Text>
-        </TouchableOpacity> */}
+        </TouchableOpacity>
       </View>
           </>
         )}

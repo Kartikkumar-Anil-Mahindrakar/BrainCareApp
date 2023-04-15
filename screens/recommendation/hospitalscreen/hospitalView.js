@@ -181,18 +181,12 @@ const Hospitalview =({route,navigation}) =>{
     vec1Magnitude += userPreferences.rating ** 2;
     vec1Magnitude = Math.sqrt(vec1Magnitude);
     const similarityScores = Object.keys(hospitals).map(hospitalKey => {
-      // let similarityScore = 0;
       let dotProduct = 0;
       let vec2Magnitude = 0;
       if (userPreferences.city === hospitals[hospitalKey].city) {
         dotProduct += 1000;
       }
       dotProduct += userPreferences.rating * hospitals[hospitalKey].rating;
-      // similarityScore += userPreferences.facilites.length * hospitals[hospitalKey].facilites.length * 0.2;
-      // similarityScore += userPreferences.beds * hospitals[hospitalKey].beds* 0.1;
-      // similarityScore += userPreferences.ambulance * hospitals[hospitalKey].ambulance* 0.1;
-      // similarityScore += userPreferences.doctors.length * hospitals[hospitalKey].doctors.length* 0.1;
-      // console.log(hospitals[hospitalKey].name,similarityScore);
 
       vec2Magnitude += hospitals[hospitalKey].rating ** 2;
       vec2Magnitude = Math.sqrt(vec2Magnitude);
@@ -204,7 +198,7 @@ const Hospitalview =({route,navigation}) =>{
       };
     });
 
-  // sort hospitals by similarity score and return top 5
+  // sort hospitals by similarity score and return top 4
   const recommendedHospitals = similarityScores.sort((a, b) => b.similarityScore - a.similarityScore).slice(0, 4).map(ele => ele.hospital);
   return recommendedHospitals;
 }
@@ -227,7 +221,7 @@ const Hospitalview =({route,navigation}) =>{
   return(
 
  <View style={styles.container}>
-  { showTopFixHospitalDetails && <FixedHospitalDetails name={name} address={address} type={type} rating={rating}/>}
+  {/* { showTopFixHospitalDetails && <FixedHospitalDetails name={name} address={address} type={type} rating={rating}/>} */}
     <ScrollView onScroll={handleScrollEvent} style={{ flexGrow: 1 }}>  
 
     <View style={styles.headerImage}>
@@ -400,7 +394,7 @@ const styles = StyleSheet.create({
     hospitalInfo:{
       borderTopLeftRadius:30,
       borderTopRightRadius:30,
-       backgroundColor:"#F9F9F9",
+       backgroundColor:"#fff",
       position:"relative",
       marginTop:300,
       height:1300
@@ -409,7 +403,7 @@ const styles = StyleSheet.create({
     fixedHospitalInfo:{
       borderTopLeftRadius:30,
       borderTopRightRadius:30,
-       backgroundColor:"#D0E0EF",
+       backgroundColor:"#fff",
       position:"absolute",
       marginTop:0,
       height:200,
@@ -419,14 +413,14 @@ const styles = StyleSheet.create({
     },
     fixedHospitalDataContainer:{
       flexDirection:"column",
-       backgroundColor:"#B4E4FF",
+       backgroundColor:"#fff",
        borderTopLeftRadius:20,
      borderTopRightRadius:20,
      
    },
     hospitalDataContainer:{
        flexDirection:"column",
-        backgroundColor:"#B4E4FF",
+        backgroundColor:"#fff",
         borderTopLeftRadius:30,
       borderTopRightRadius:30,
       
@@ -435,13 +429,13 @@ const styles = StyleSheet.create({
       flexDirection:"row",
       alignItems:"center",
       justifyContent:"flex-start",
-      backgroundColor:"#D0E0EF",   
+      backgroundColor:"#fff",   
     },
     hospitalData:{
       flexDirection:"row",
       alignItems:"center",
       justifyContent:"flex-start",
-      backgroundColor:"#D0E0EF",   
+      backgroundColor:"#fff",   
     },
    
      statisticsContainer:{
@@ -449,7 +443,7 @@ const styles = StyleSheet.create({
        
         justifyContent:"center",
       marginTop:10,
-      backgroundColor:"#F9F9F9",
+      backgroundColor:"#fff",
     },
     statisticsCard:{
      flexDirection:"column",

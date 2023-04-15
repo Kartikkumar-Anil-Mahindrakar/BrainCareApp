@@ -48,13 +48,13 @@ const TransferItem = (props) => {
 }
 
 const CareNumber = (props) => {
-  const [appDetails, setAppDetails] = useState({})
+  const [profileCount, setProfileCount] = useState(0)
 
   const fetchData = async ()=>{
-    const starCountRef = ref(db, 'App_Details');
+    const starCountRef = ref(db, 'Profile');
     onValue(starCountRef, (snapshot) => {
       const data = snapshot.val();
-      setAppDetails(()=>data);
+      setProfileCount(()=>Object.keys(data).length);
       // console.log(data)
     },{
       onlyOnce:true,
@@ -70,17 +70,17 @@ const CareNumber = (props) => {
   return ( 
     <>
     <View style={{flexDirection:"row",alignItems: "center",justifyContent: "space-evenly"}}>
-      <TransferItem data = {props.data[0] } value={appDetails.Patients_visited} />
+      <TransferItem data = {props.data[0] } value={profileCount} />
       <Spacer height={15} />
       
-      <TransferItem data = { props.data[1] } value={appDetails.Doctors}/>
+      <TransferItem data = { props.data[1] } value={props.doctorCount}/>
       
     </View>
     <View style={{flexDirection:"row",alignItems: "center",justifyContent: "space-evenly"}}>
-      <TransferItem data = {props.data[2] } value={appDetails.Tumors_detected} />
+      <TransferItem data = {props.data[2] } value={4} />
       <Spacer height={15} />
       
-      <TransferItem data = { props.data[3] } value={appDetails.Hospitals_registered} />
+      <TransferItem data = { props.data[3] } value={props.hospitalCount} />
       
     </View>
     </>
