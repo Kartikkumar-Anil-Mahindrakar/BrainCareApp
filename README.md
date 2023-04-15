@@ -29,7 +29,7 @@ New message
 
 Message by kartik
 
-## Final changes by SOmesh 15/4/23
+## Final changes by Somesh 15/4/23
 
 Message by Somesh
 
